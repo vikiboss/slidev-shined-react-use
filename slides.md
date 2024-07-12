@@ -139,6 +139,12 @@ function Counter() {
 - ...
 
 ---
+layout: center
+---
+
+# 「逻辑组件」
+
+---
 layout: two-cols
 ---
 
@@ -215,11 +221,11 @@ layout: center
   <div v-if="$clicks === 3">🐛 罪魁祸首：<code>add</code> 函数每次渲染都会重新创建</div>
   <div v-if="$clicks === 4">😎 小意思，上 <code>useMemoizedFn</code></div>
   <div v-if="$clicks === 5">😄 效果显著，完美解决</div>
-  <div v-if="$clicks === 6">🆕 新场景：用户交互触发异步操作，但完成前用户离开了</div>
+  <div v-if="$clicks === 6">🆕 新场景：用户交互触发异步操作，在完成前用户提前离开了</div>
   <div v-if="$clicks === 7">🆕 新场景：但后续存在 <code>setState</code> 操作 (即组件卸载后)</div>
-  <div v-if="[8, 9].includes($clicks)">🤔️ 虽然这次只是个 Warning，不影响功能，但是还得处理</div>
+  <div v-if="[8, 9].includes($clicks)">🤔️ 虽然没有问题，但是报了个 Warning</div>
   <div v-if="$clicks === 10">🙋 这题我会，该 <code>useSafeState</code> 出马了</div>
-  <div v-if="$clicks === 11">🤗 这下就没问题了，组件卸载后永远也不会执行了 (<a href="https://github.com/alibaba/hooks/blob/b2f12185963b7efe46ec70c97f661849f89892b5/packages/hooks/src/useSafeState/index.ts#L13-L15">按照 ahooks 的逻辑</a>)</div>
+  <div v-if="$clicks === 11">🤗 这下组件卸载后，永远也不会执行 <code>setState</code> 了 (<a href="https://github.com/alibaba/hooks/blob/b2f12185963b7efe46ec70c97f661849f89892b5/packages/hooks/src/useSafeState/index.ts#L13-L15">按照 ahooks 的逻辑</a>)</div>
   <div v-if="$clicks === 12">🆙 新需求：需支持重置操作，同时支持传参改变初始值</div>
   <div v-if="$clicks === 13">🔄 防止 <code>useMemoizedFn</code> 实现不规范，未读取最新函数</div>
   <div v-if="$clicks === 14">🔄 使用 <code>setState((state) => newState)</code> 的写法</div>
@@ -228,7 +234,7 @@ layout: center
   <div v-if="$clicks === 17">🤌 收拢状态和操作，统一返回风格</div>
   <div v-if="$clicks === 18">📌 <code>actions</code> 对象也需要保持引用稳定，同时优化参数和命名</div>
   <div v-if="$clicks === 19">🥳 一个成熟的 <code>useCounter</code> 大功告成！</div>
-  <div v-if="$clicks === 20">🔍 虽然看着没什么变化，实则内部存在大量优化</div>
+  <div v-if="$clicks === 20">🔍 看起来貌似没变化，但是内部已经做了大量优化</div>
   <div v-if="$clicks === 21">🫣 这基本就是 <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code> 库里的 <code>useCounter</code> 的核心</div>
   <div v-if="$clicks === 22">22</div>
 </div>
@@ -926,12 +932,13 @@ layout: center
 ## ahooks 的做法
 
 - 组件卸载后，不执行 setState，以抑制抛出的警告
-- 其余与 useState 一致
+- 其余情况与 useState 一致
 
 ## @shined/react-use 的做法
 
-- React 18 及以上版本，等同于 useState，不做任何处理
-- React 17 及以下版本，组件卸载后，不执行 setState，以抑制抛出的警告
+- 行为依版本而不同
+  - React 18 及以上版本，不做任何处理，等同于 useState，遵循官方推荐做法
+  - React 17 及以下版本，组件卸载后，不执行 setState，以抑制抛出的警告
 - 新增了可选的 deep 选项，用于深度对比并决定是否更新，默认 false，具备渲染优化
 
 <br />
@@ -941,7 +948,7 @@ layout: center
 ```tsx
 const [value, setValue] = useSafeState({ count: 1 }, { deep: true })
 
-setValue({ count: 1}) // “同样”的对象，如果未设置 deep，将触发组件重新更新
+setValue({ count: 1}) // 更新 「同样」 的对象，如果未设置 deep，将触发组件重新更新
 ```
 
 </v-click>
@@ -988,6 +995,10 @@ layout: center
 - **Hooks 老手/上层封装**: useStableFn / useLatest / useCreation
 
 </v-clicks>
+
+<!--
+的点点滴滴
+-->
 
 ---
 layout: center
@@ -1050,4 +1061,3 @@ layout: end
 感谢大家的耐心收听
 
 ## （Q&A）
-
