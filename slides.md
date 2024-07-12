@@ -783,7 +783,7 @@ layout: two-cols
   </div>
   <div class='flex items-center'>
     <span>发布：</span>
-    <vscode-icons-folder-type-github class="size-8 mx-2" /> GitHub Release
+    <vscode-icons-folder-type-github class="size-8 mx-2" /> GitHub Release +
     <img src="/changelog.svg" class="inline size-8 mx-2" /> <code>CHANGELOG.md</code>
   </div>
   <div class='flex items-center'>
@@ -804,6 +804,8 @@ layout: center
 
 # State vs Ref
 
+State 和 Ref 都可以用来保存信息，该如何抉择
+
 - 全局变量对于所有组件实例都是共享的，导致组件之间的状态混乱
 - 渲染阶段会在每次更新时被执行，let 和 const 会被重新声明
 - 遵循组件生命周期且多次渲染仍稳定存在的“状态”：State 和 Ref
@@ -816,13 +818,10 @@ let globalCount = 0
 function Counter() {
   // 每次渲染都会被重新声明
   let count = 0 
-
   // 只会被声明一次，更改不会触发重新渲染
   const countRef = useRef(0) 
-  
   // 只会被声明一次，更改会触发重新渲染
   const [count, setCount] = useState(0) 
-
   // ...
 }
 ```
@@ -831,35 +830,23 @@ function Counter() {
 
 # State
 
-- A state variable to retain the data between renders.
-
-> 用于保留渲染之间数据的状态变量。
-
-- A state setter function to update the variable and trigger React to render the component again.
-
-> 一个状态设置函数，用于更新变量并触发 React 再次渲染组件。
+- 用于保留渲染之间数据的状态变量 (渲染稳定)。
+- 状态对于组件的每个副本都是本地的 (实例隔离)。
+- 更改它会触发重新渲染。
 
 <br />
 
 # Ref
 
-- You can store information between re-renders (unlike regular variables, which reset on every render).
-
-> 可以在重新渲染之间存储信息（不同于在每次渲染时重置的常规变量）。
-
-- Changing it does not trigger a re-render (unlike state variables, which trigger a re-render).
-
-> 更改它不会触发重新渲染（与触发重新渲染的状态变量不同）。
-
-- The information is local to each copy of your component (unlike the variables outside, which are shared).
-
-> 该信息对于组件的每个副本都是本地的（不像外部变量，它们是共享的）。
+- 可以在重新渲染之间存储信息 (渲染稳定，不像局部变量)。
+- 该信息对于组件的每个副本都是本地的 (实例隔离)。
+- 更改它不会触发重新渲染 (不触发渲染，与 State 不同)。
 
 ---
 
-# isActive (Ref Getter)
+# 引入 Ref Getter
 
-兼具存储信息与渲染优化的取舍与妥协
+兼具信息存储功能与渲染优化的取舍与妥协
 
 ```ts
 // const pausable = usePausable(); // { isActive, resume, pause }
@@ -875,15 +862,16 @@ function handleClick() {
 }
 ```
 
+<tip v-click><b>isActive</b> 状态的变更，默认不会触发重新渲染，值可通过 Getter 函数获取</tip>
+
 ---
 
-# isActive 的内部
+# isActive (Ref Getter) 的内部
 
 <br />
 
 ```ts
 const isActive = () => ref.current
-const isSupported = () => ref.current
 ```
 
 <br />
@@ -896,7 +884,6 @@ const isSupported = () => ref.current
 
 ```tsx
 const isActive = useStableFn(() => ref.current)
-const isSupported = useStableFn(() => ref.current)
 ```
 
 </div>
@@ -911,46 +898,147 @@ const [isActiveRef, isActive] = useGetterRef(false)
 
 </div>
 
+<tip v-click>利用 <b>useGetterRef</b> 来创建 Ref Getter，底层使用 Ref 而不是 State</tip>
+
+---
+layout: center
 ---
 
 # useSafeState 做了什么
 
-- React 18 及以上版本允许卸载后 setState
-- 可选的 deep 优化，默认 false
+---
 
+# 问题背景
+
+- 组件卸载后执行 setState，React 会抛出警告
+- 本质上，组件卸载后执行的 setState 只是一个 noop (空函数)
+- 抛出的警告并不意味着内存泄漏，只是在提醒你清理定时器、订阅函数等可能导致内存泄漏的操作
+- React 官方意识到了这个警告的不准确，从 React 18 开始移除了它
+- 官方指出，组件卸载后应当执行 setState，未来可能会有「状态保持」等特性依赖于此
+- 这个时候卸载后的 setState 将有意义，换句话说，卸载后不执行 setState 将会导致更严重的问题
+- 因而在没有抛出警告时，不应当拦截 setState 操作（尽管目前而言只是 noop，没有实际意义）
+- 更多讨论可以参考 [React Discussion #82](https://github.com/reactwg/react-18/discussions/82)
+
+<img src="/set-state.png" class='mt-4 h-160px rounded' v-click />
+
+---
+
+## ahooks 的做法
+
+- 组件卸载后，不执行 setState，以抑制抛出的警告
+- 其余与 useState 一致
+
+## @shined/react-use 的做法
+
+- React 18 及以上版本，等同于 useState，不做任何处理
+- React 17 及以下版本，组件卸载后，不执行 setState，以抑制抛出的警告
+- 新增了可选的 deep 选项，用于深度对比并决定是否更新，默认 false，具备渲染优化
+
+<br />
+
+<v-click>
+
+```tsx
+const [value, setValue] = useSafeState({ count: 1 }, { deep: true })
+
+setValue({ count: 1}) // “同样”的对象，如果未设置 deep，将触发组件重新更新
+```
+
+</v-click>
+
+<tip v-click>在状态「简单、可控」时，一次 deep compare 的开销远比一次组件渲染小的多得多</tip>
+
+---
+layout: center
+---
+
+# 单一职责
+
+---
+
+# 一次只做一件事，并把它做好
+
+---
+layout: center
 ---
 
 # 关于 React 19
 
 ---
 
-# 使用预测
+---
+layout: center
+---
 
-预测业务开发中最可能常用的 Hooks
-
-- 生命周期：useMount / useUnmount / useEffectOnce / useUpdateEffect
-- 状态相关：useSafeState / useSetState / useToggle / useCircularList
-- loading：useAsyncFn (useLoadingFn) / createSingleLoading
-- 节流/防抖/定时器：useDebounceFn / useThrottleFn / useIntervalFn (支持 RAF)
-- 强业务/场景化：useInfiniteScroll / useMultiSelect / useDynamicList / useCountdown
-- 时间格式化：useDateFormat (dayjs、moment、date-fns 简单使用场景的平替)
-- 复制操作：useClipboard (读、写，自动降级到 <code>document.exec('copy')</code>)
-- 上层封装/Hooks 老手: useStableFn / useLatest / useCreation
+# Hooks 使用引导 / 高频预测
 
 ---
 
-# Hooks 的后续规划
+# 常用 Hooks
 
-- 起步期（当前）：原子化为主，覆盖大部分场景，已生产可用 （137 个）
-- 业务强化期：封装强业务的上层 Hooks，做到 「常见场景，一行代码开箱即用」
-- 生态完善期：与 shineout 等主流库做集成联动，简化业务开发，扩大生态
+<v-clicks>
+
+- **生命周期**：useMount / useUnmount / useEffectOnce / useUpdateEffect
+- **状态相关**：useSafeState / useSetState / useToggle / useCircularList
+- **Loading 状态**：useAsyncFn (useLoadingFn) / createSingleLoading
+- **节流/防抖/定时器**：useDebounceFn / useThrottleFn / useIntervalFn (支持 RAF)
+- **强业务/场景化**：useInfiniteScroll / useMultiSelect / useDynamicList / useCountdown
+- **时间格式化**：useDateFormat (dayjs、moment、date-fns 简单使用场景的平替)
+- **复制操作 (剪贴板)**：useClipboard (读、写，自动降级到 <code>document.exec('copy')</code>)
+- **Hooks 老手/上层封装**: useStableFn / useLatest / useCreation
+
+</v-clicks>
+
+---
+layout: center
+---
+
+# @shined/react-use 的后续规划
+
+---
+
+# 后续规划
+
+<v-clicks>
+
+- 起步期（当前阶段）
+  - 以原子化为主，也包含部分场景化 Hooks
+  - 覆盖大部分场景，已生产可用 （目前 137 个）
+- 业务强化期
+  - 封装强业务的上层 Hooks
+  - 做到 「常见场景，一行代码开箱即用」
+- 生态完善期
+  - 与 shineout 等主流库做集成联动
+  - 简化业务开发，同时扩大生态
+
+</v-clicks>
+
+---
+layout: center
+---
+
+# 回顾
 
 ---
 
 # 回顾
+
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
 
 ---
 layout: end
 ---
 
 # The End
+
+感谢大家的耐心收听
+
+## （Q&A）
+
