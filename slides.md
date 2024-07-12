@@ -570,50 +570,41 @@ layout: center
 # @shined/react-use 的特性与内部优化
 
 ---
-layout: iframe-right
-url: https://sheinsight.github.io/react-use/
----
 
 # 全面
 
-- 涵盖 9 大类
-- 覆盖 Web 开发的各个方面
-- 目前仍在增加中
+- 划分了 9 个大类，涵盖 Web 开发的各个方面
+- 迄今为止已经有 100+ 个 Hooks，仍在增加中
 
-<!-- <v-click at="1"><img class='h-48 mt-8 rounded-md' src='/categories.png' /></v-click> -->
+<img v-click class='h-48 mt-8 rounded-md' src='/categories.png' />
+
+<tip v-click>不管开发什么系统，总能找到你用得到的 <b>Hooks</b></tip>
 
 ---
-layout: iframe-right
-url: https://unpkg.com/browse/@shined/react-use@latest/package.json
----
+
 # 轻量
 
-- 0 依赖
-- ESM 设计和交付
-- 支持 <code>Tree Shaking</code>
-- 无副作用
+- 真正 0 依赖，减轻项目体积
+- 采用 ESM 设计和交付，支持 <code>Tree Shaking</code>，无副作用
 
-<!-- <v-click at="1">
-  <img class='h-48 mt-8 rounded-md' src='/zero-dependencies.png' />
-</v-click> -->
+<img v-click class='h-48 mt-8 rounded-md' src='/zero-dependencies.png' />
+
+<tip v-click>要用什么 <b>Hooks</b>，你只管引入就好</tip>
 
 ---
 
 # 灵活
 
-<v-click at="1">
-支持 <code>ElementTarget</code>、<code>Pausable</code>、<code>Ref Getter</code> 等特性。
-</v-click>
+- 支持 <code>ElementTarget</code>、<code>Pausable</code>、<code>Ref Getter</code> 等特性。
 
-<div v-click class='mt-8'>
+<div v-click class='mt-4'>
 
 ```tsx twoslash
 import { useTargetElement, useElementSize, usePausable, useMouse } from '@shined/react-use'
 
 const el = useTargetElement("#target")
 
-const size = useElementSize('#el-size')
-const htmlSize = useElementSize(() => document.documentElement)
+const size = useElementSize(() => document.documentElement)
 
 const pausable = usePausable(false, () => {}, () => {});
 const { isActive, pause, resume } = pausable;
@@ -628,12 +619,14 @@ if (isActive()) {
 
 </div>
 
+<tip v-click>所有 <b>Target</b> 参数都经过 <b>useTargetElement</b> 处理，确保开发体验一致性</tip>
+
 ---
 
 # 高度优化 + 最佳实践
 
 <v-click at="1">
-<code>Safe State</code>、<code>Latest Value</code>、<code>Stabilization</code> 等。
+  <code>Safe State</code>、<code>Latest Value</code>、<code>Stabilization</code> 等。
 </v-click>
 
 <div v-click class='mt-8'>
@@ -650,14 +643,14 @@ const add = useStableFn((delta = 1) => {
 
 </div>
 
-<div v-click class='mt-8'>内部的所有的 Hooks 均严格遵循以上优化</div>
+<tip v-click>内部所有 <b>Hooks</b> 均严格遵循以上优化，提供最佳实践</tip>
 
 ---
 
 # 多环境友好
 
 <v-click at="1">
-支持 SSR (<code>Next.js</code>)、<code>React Native</code>、<code>Ink</code> 等。
+  支持 SSR (<code>Next.js</code>)、<code>React Native</code>、<code>Ink</code> 等。
 </v-click>
 
 <div v-click class='mt-8'>
@@ -676,6 +669,8 @@ render(<App />);
 ```
 
 </div>
+
+<tip v-click>只要能用 <b>useEffect</b> 的地方，就能用 <b>@shined/react-use</b></tip>
 
 ---
 layout: iframe-right
