@@ -1023,14 +1023,23 @@ layout: center
 
 # 回顾
 
-- 1
-- 2
-- 3
-- 4
-- 5
-- 6
-- 7
-- 8
+<v-clicks>
+
+- Hooks 与 「逻辑组件」
+  - React 的重要时间节点，Hooks 开发成为主流
+  - 提出 「逻辑组件 (Hooks)」 概念，Hooks 可以被按需组合
+  - 改进 useCounter，了解 Hooks 的常见陷阱与最佳实践
+- <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code>
+  - 全面、轻量、灵活、高度优化、多环境友好、交互式文档、出色的开发体验、现代化配置
+- 一些思考
+  - State 和 Ref 的特点与取舍 
+  - Ref Getter，兼具存储信息与渲染优化
+  - useSafeState 的设计与思考
+  - 单一职责 (逻辑组件的按需组合)
+  - React 19
+- 使用预测及后续规划
+
+</v-clicks>
 
 ---
 layout: end
