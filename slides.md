@@ -1,0 +1,961 @@
+---
+title: React Hooks 库的探索与思考
+class: text-center
+layout: cover
+background: https://proxy.viki.moe/photo-1456362150245-7f7d7ed8ebae?proxy-host=images.unsplash.com
+# background: https://cover.sli.dev/
+defaults:
+  highlighter: shiki
+  transition: fade-out
+---
+
+# React Hooks 库的探索与思考
+
+👷 @Viki · 📅 2024.07
+
+<div class="flex justify-center mt-16 mb-8" >
+  <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-24" />
+</div>
+
+<code><a href="https://sheinsight.github.io/react-use">@shined/react-use</a></code> v1 正式版已发布！🎉
+
+---
+layout: center
+---
+
+<div class='text-center'>
+  <mdi-react class='my-4 size-16' />
+</div>
+
+# React 的重要事件节点
+
+---
+
+<v-clicks>
+
+- 2013 年 05 月 —— React 正式开源 (v0.7)
+
+- 2015 年 07 月 —— React Native 发布
+
+- 2016 年 04 月 —— React 跃升大版本 (v0.14 => v15)
+
+- 2016 年 07 月 —— React Fiber 发布 (v16)
+
+- 2018 年 02 月 —— React Context API 发布 (v16.3)
+
+- **<span v-mark="{ at: 11, color:'#f59e0b', type: 'underline' }">2018 年 10 月 —— React Hooks 提案</span>**
+
+- **<span v-mark="{ at: 11, color:'#f59e0b', type: 'underline' }">2019 年 02 月 —— React Hooks 正式发布 (v16.8)</span>**
+
+- 2020 年 05 月 —— React JSX-Runtime (v17)
+
+- 2022 年 06 月 —— React Concurrent Mode & Batch Update (v18)
+
+- 2024 年 04 月 —— React Server Component 发布 (v19 RC)
+
+</v-clicks>
+...
+
+---
+layout: center
+---
+
+# Function Component + Hooks 成为主流
+
+---
+
+## Class Component
+
+```tsx twoslash
+// === before ===
+import React, { Component } from 'react'
+class Counter extends Component {
+  state = { count: 0 }
+  render() {
+    return (
+      <button onClick={() => this.setState({ count: this.state.count + 1 })}>
+        {this.state.count}
+      </button>
+    )
+  }
+}
+```
+
+<br />
+
+<v-click>
+
+## Function Component
+
+```tsx twoslash
+// === after ===
+import React, { useState } from 'react'
+function Counter() {
+  const [count, setCount] = useState(0)
+  return <button onClick={() => setCount(count + 1)}>{count}</button>
+}
+```
+
+</v-click>
+
+---
+
+# Hooks 带来的变革
+
+<v-clicks>
+
+- 函数组件拥有了此前只有类组件才有的能力
+  - 状态管理 (useState)
+  - 生命周期 (useEffect)
+  - 上下文 (useContext)
+  - ...
+
+- 提高了开发体验
+  - 改善了代码的组织和复用性
+  - 使得代码逻辑更易于理解
+  - 使得代码更容易测试
+  - ...
+
+</v-clicks>
+
+---
+
+# 社区涌现出大批优秀的 Hooks 库
+
+## Hooks 集合
+
+- <a href='https://github.com/streamich/react-use'><mdi-github /> streamich/react-use (react-use)</a>
+- <a href='https://github.com/alibaba/hooks'><mdi-github /> alibaba/hooks (ahooks)</a>
+- <a href='https://github.com/antonioru/beautiful-react-hooks'><mdi-github /> antonioru/beautiful-react-hooks</a>
+- <a href='https://github.com/uidotdev/usehooks'><mdi-github /> uidotdev/usehooks</a>
+- ...
+
+## 特定功能 Hooks
+
+- <a href='https://github.com/vercel/swr'><mdi-github /> vercel/swr (useSWR)</a>
+- <a href='https://github.com/tannerlinsley/react-query'><mdi-github /> tannerlinsley/react-query (useQuery)</a>
+- <a href='https://github.com/tannerlinsley/reduxjs/react-redux'><mdi-github /> reduxjs/react-redux (useSelector)</a>
+- <a href='https://github.com/tannerlinsley/immerjs/use-immer'><mdi-github /> immerjs/use-immer (useImmer)</a>
+- ...
+
+---
+layout: two-cols
+---
+
+# 一个简单的 Counter 组件
+
+````md magic-move {at:2}
+```tsx {*|2-4|6-10|*|2-4}
+function Counter() {
+  const [count, setCount] = useState(0)
+  const add = () => setCount(count + 1)
+  const minus = () => setCount(count - 1)
+  return (
+    <div>
+      <button onClick={add}>-</button>
+      <span>{count}</span>
+      <button onClick={minus}>+</button>
+    </div>
+  )
+}
+```
+
+```tsx {*|}
+function useCounter(initialCount = 0) {
+  const [count, setCount] = useState(initialCount)
+  const add = () => setCount(count + 1)
+  const minus = () => setCount(count - 1)
+  return { count, add, minus }
+}
+```
+
+```tsx
+function Counter() {
+  const { count, add, minus } = useCounter(0)
+  return (
+    <div>
+      <button onClick={add}>-</button>
+      <span>{count}</span>
+      <button onClick={minus}>+</button>
+    </div>
+  )
+}
+```
+
+````
+
+::right::
+
+<div class='text-center my-12' v-click="1">React 组件 = 业务逻辑 + UI 界面</div>
+
+<div class='text-center my-12 flex gap-12 justify-center'>
+  <span v-click="2">业务逻辑</span><span v-click="3">UI 界面</span>
+</div>
+
+<div class='text-center my-12 flex gap-4 justify-center'>
+  <span v-click="7">Hooks</span><span v-click="8">👉</span><span v-click="8">逻辑组件</span>
+</div>
+
+<div class='text-center my-12' v-click="9">React 组件 = 逻辑组件 (Hooks) + UI 界面</div>
+
+---
+layout: center
+---
+
+# useCounter 的打怪升级之路
+
+---
+
+# useCounter 的打怪升级之路
+
+<div class='mb-8'>
+  <div v-if="$clicks === 0">✅ 运行良好</div>
+  <div v-if="$clicks === 1">🆕 新需求：首次 +1，此后每间隔固定时间 +1</div>
+  <div v-if="$clicks === 2">😨 组件死循环了，为什么？</div>
+  <div v-if="$clicks === 3">🐛 罪魁祸首：<code>add</code> 函数每次渲染都会重新创建</div>
+  <div v-if="$clicks === 4">😎 小意思，上 <code>useMemoizedFn</code></div>
+  <div v-if="$clicks === 5">😄 效果显著，完美解决</div>
+  <div v-if="$clicks === 6">🆕 新场景：用户交互触发异步操作，但完成前用户离开了</div>
+  <div v-if="$clicks === 7">🆕 新场景：但后续存在 <code>setState</code> 操作 (即组件卸载后)</div>
+  <div v-if="[8, 9].includes($clicks)">🤔️ 虽然这次只是个 Warning，不影响功能，但是还得处理</div>
+  <div v-if="$clicks === 10">🙋 这题我会，该 <code>useSafeState</code> 出马了</div>
+  <div v-if="$clicks === 11">🤗 这下就没问题了，组件卸载后永远也不会执行了 (<a href="https://github.com/alibaba/hooks/blob/b2f12185963b7efe46ec70c97f661849f89892b5/packages/hooks/src/useSafeState/index.ts#L13-L15">按照 ahooks 的逻辑</a>)</div>
+  <div v-if="$clicks === 12">🆙 新需求：需支持重置操作，同时支持传参改变初始值</div>
+  <div v-if="$clicks === 13">🔄 防止 <code>useMemoizedFn</code> 实现不规范，未读取最新函数</div>
+  <div v-if="$clicks === 14">🔄 使用 <code>setState((state) => newState)</code> 的写法</div>
+  <div v-if="$clicks === 15">🤔️ 那，其他状态怎么办？</div>
+  <div v-if="$clicks === 16">🪄 <code>useLatest</code> 派上用场</div>
+  <div v-if="$clicks === 17">🤌 收拢状态和操作，统一返回风格</div>
+  <div v-if="$clicks === 18">📌 <code>actions</code> 对象也需要保持引用稳定，同时优化参数和命名</div>
+  <div v-if="$clicks === 19">🥳 一个成熟的 <code>useCounter</code> 大功告成！</div>
+  <div v-if="$clicks === 20">🔍 虽然看着没什么变化，实则内部存在大量优化</div>
+  <div v-if="$clicks === 21">🫣 这基本就是 <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code> 库里的 <code>useCounter</code> 的核心</div>
+  <div v-if="$clicks === 22">22</div>
+</div>
+
+````md magic-move
+```tsx
+function Counter() {
+  const { count, add, minus } = useCounter(0)
+  return (
+    <div>
+      <button onClick={add}>-</button>
+      <span>{count}</span>
+      <button onClick={minus}>+</button>
+    </div>
+  )
+}
+```
+
+```tsx {*|7}
+function OtherComponent() {
+  const { count, add, minus } = useCounter(0)
+  useEffect(() => {
+    add()
+    const timer = setInterval(add, 1000);
+    return () => clearInterval(timer) 
+  }, [add])
+  return <div>OtherComponent</div>
+}
+```
+
+```tsx {3}
+function useCounter(initialCount = 0) {
+  const [count, setCount] = useState(initialCount)
+  const add = () => setCount(count + 1)
+  const minus = () => setCount(count - 1)
+  return { count, add, minus }
+}
+```
+
+```tsx {3,4}
+function useCounter(initialCount = 0) {
+  const [count, setCount] = useState(initialCount)
+  const add = useMemoizedFn(() => setCount(count + 1))
+  const minus = useMemoizedFn(() => setCount(count - 1))
+  return { count, add, minus }
+}
+```
+
+```tsx
+function OtherComponent() {
+  const { count, add, minus } = useCounter(0)
+  useEffect(() => {
+    add()
+    const timer = setInterval(add, 1000);
+    return () => clearInterval(timer) 
+  }, [add])
+  return <div>OtherComponent</div>
+}
+```
+
+```tsx
+function OtherComponent() {
+  const { count, add, minus } = useCounter(0)
+  async function handleClick() {
+    await fetchData(); // 3000ms
+    add() 
+  }
+  return <button onClick={handleClick}>{count}</button>
+}
+```
+
+```tsx
+function OtherComponent() {
+  const { count, add, minus } = useCounter(0)
+  async function handleClick() {
+    await fetchData(); // 3000ms
+    // When component unmount, `setState` will still be called.
+    add() 
+  }
+  return <button onClick={handleClick}>{count}</button>
+}
+```
+
+```tsx
+function OtherComponent() {
+  const { count, add, minus } = useCounter(0)
+  async function handleClick() {
+    await fetchData(); // 3000ms
+    // Warning: Can't perform a React state update on an unmounted component. This is a no-op,
+    // but it indicates a memory leak in your application.
+    // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
+    add() 
+  }
+  return <button onClick={handleClick}>{count}</button>
+}
+```
+
+```tsx
+function useCounter(initialCount = 0) {
+  const [count, setCount] = useState(initialCount)
+  const add = useMemoizedFn(() => setCount(count + 1))
+  const minus = useMemoizedFn(() => setCount(count - 1))
+  return { count, add, minus }
+}
+```
+
+```tsx {2|*}
+function useCounter(initialCount = 0) {
+  const [count, setCount] = useSafeState(initialCount)
+  const add = useMemoizedFn(() => setCount(count + 1))
+  const minus = useMemoizedFn(() => setCount(count - 1))
+  return { count, add, minus }
+}
+```
+
+```tsx {2,6-14}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const add = useMemoizedFn(() => setCount(count + 1))
+  const minus = useMemoizedFn(() => setCount(count - 1))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(initial)
+    }
+  })
+  return { count, add, minus, reset }
+}
+```
+
+```tsx {4,5}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const add = useMemoizedFn(() => setCount(count + 1))
+  const minus = useMemoizedFn(() => setCount(count - 1))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(initial)
+    }
+  })
+  return { count, add, minus, reset }
+}
+```
+
+```tsx {4,5}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const add = useMemoizedFn(() => setCount(count => count + 1))
+  const minus = useMemoizedFn(() => setCount(count => count - 1))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(initial)
+    }
+  })
+  return { count, add, minus, reset }
+}
+```
+
+```tsx {11}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const add = useMemoizedFn(() => setCount(count => count + 1))
+  const minus = useMemoizedFn(() => setCount(count => count - 1))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(initial) // What about here?
+    }
+  })
+  return { count, add, minus, reset }
+}
+```
+
+```tsx {4,12}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const latest = useLatest({ initial })
+  const add = useMemoizedFn(() => setCount(count => count + 1))
+  const minus = useMemoizedFn(() => setCount(count => count - 1))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(latest.current.initial)
+    }
+  })
+  return { count, add, minus, reset }
+}
+```
+
+```tsx {15,16}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const latest = useLatest({ initial })
+  const add = useMemoizedFn(() => setCount(count => count + 1))
+  const minus = useMemoizedFn(() => setCount(count => count - 1))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(latest.current.initial)
+    }
+  })
+  const actions = { add, minus, reset }
+  return [count, actions]
+}
+```
+
+```tsx {5,6,15,16|*}
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const latest = useLatest({ initial })
+  const inc = useMemoizedFn((delta = 1) => setCount(count => count + delta))
+  const dec = useMemoizedFn((delta = 1) => setCount(count => count - delta))
+  const reset = useMemoizedFn((newInitial) => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(latest.current.initial)
+    }
+  })
+  const actions = useCreation(() => ({ inc, dec, reset }), [])
+  return [count, actions]
+}
+```
+
+```tsx
+function Counter() {
+  const [count, actions] = useCounter(0)
+  return (
+    <div>
+      <button onClick={() => actions.inc(1)}>-</button>
+      <span>{count}</span>
+      <button onClick={() => actions.dec(1)}>+</button>
+    </div>
+  )
+}
+```
+
+```tsx {1,3}
+import { useCounter } from '@shined/react-use'
+function Counter() {
+  const [count, actions] = useCounter(0)
+  return (
+    <div>
+      <button onClick={() => actions.inc(1)}>-</button>
+      <span>{count}</span>
+      <button onClick={() => actions.dec(1)}>+</button>
+    </div>
+  )
+}
+```
+````
+
+---
+layout: center
+---
+
+<div class="flex justify-center mb-12" >
+  <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-36" />
+</div>
+
+<div class='text-center mb-8'>
+  <code class='text-3xl!'>@shined/react-use</code>
+</div>
+
+<v-click>
+一个 SSR 友好、全面、标准化和高度优化的 React Hooks 库
+</v-click>
+
+
+---
+
+<div>
+  <div class="flex flex-col justify-center my-8" >
+    <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-24 mb-4" />
+    <div class='text-center'><code>@shined/react-use</code></div>
+  </div>
+  <div class='size-full text-2xl flex flex-col justify-center items-center'>
+    <div class='flex gap-6 my-6'>
+      <div class='w-48 group'>
+        <mdi-sparkles-outline class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Animation
+      </div>
+      <div class='w-48 group'>
+        <mdi-google-chrome class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Browser
+      </div>
+      <div class='w-48 group'>
+        <mdi-hexagon-slice-6 class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Element
+      </div>
+    </div>
+    <div class='flex gap-6 my-6'>
+      <div class='w-48 group'>
+        <mdi-react class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Lifecycle
+      </div>
+      <div class='w-48 group'>
+        <mdi-internet class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Network
+      </div>
+      <div class='w-48 group'>
+        <mdi-toolbox-outline class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />ProUtilities
+      </div>
+    </div>
+    <div class='flex gap-6 my-6'>
+      <div class='w-48 group'>
+        <mdi-access-point class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Sensors
+      </div>
+      <div class='w-48 group'>
+        <mdi-atom class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />State
+      </div>
+      <div class='w-48 group'>
+        <mdi-tools class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Utilities
+      </div>
+    </div>
+  </div>
+</div>
+---
+layout: center
+---
+
+# @shined/react-use 的特性与内部优化
+
+---
+layout: iframe-right
+url: https://sheinsight.github.io/react-use/
+---
+
+# 全面
+
+- 涵盖 9 大类
+- 覆盖 Web 开发的各个方面
+- 目前仍在增加中
+
+<!-- <v-click at="1"><img class='h-48 mt-8 rounded-md' src='/categories.png' /></v-click> -->
+
+---
+layout: iframe-right
+url: https://unpkg.com/browse/@shined/react-use@latest/package.json
+---
+# 轻量
+
+- 0 依赖
+- ESM 设计和交付
+- 支持 <code>Tree Shaking</code>
+- 无副作用
+
+<!-- <v-click at="1">
+  <img class='h-48 mt-8 rounded-md' src='/zero-dependencies.png' />
+</v-click> -->
+
+---
+
+# 灵活
+
+<v-click at="1">
+支持 <code>ElementTarget</code>、<code>Pausable</code>、<code>Ref Getter</code> 等特性。
+</v-click>
+
+<div v-click class='mt-8'>
+
+```tsx twoslash
+import { useTargetElement, useElementSize, usePausable, useMouse } from '@shined/react-use'
+
+const el = useTargetElement("#target")
+
+const size = useElementSize('#el-size')
+const htmlSize = useElementSize(() => document.documentElement)
+
+const pausable = usePausable(false, () => {}, () => {});
+const { isActive, pause, resume } = pausable;
+
+const { x, y } = useMouse();
+// const { x, y, isActive, pause, resume } = useMouse();
+
+if (isActive()) {
+  // do something...
+}
+```
+
+</div>
+
+---
+
+# 高度优化 + 最佳实践
+
+<v-click at="1">
+<code>Safe State</code>、<code>Latest Value</code>、<code>Stabilization</code> 等。
+</v-click>
+
+<div v-click class='mt-8'>
+
+```tsx
+const [count, setCount] = useSafeState(0)
+
+const latest = useLatest({ initial })
+
+const add = useStableFn((delta = 1) => {
+  setState(count => count + delta)
+})
+```
+
+</div>
+
+<div v-click class='mt-8'>内部的所有的 Hooks 均严格遵循以上优化</div>
+
+---
+
+# 多环境友好
+
+<v-click at="1">
+支持 SSR (<code>Next.js</code>)、<code>React Native</code>、<code>Ink</code> 等。
+</v-click>
+
+<div v-click class='mt-8'>
+
+```tsx
+import { render, Text } from "ink";
+import { useIntervalFn, useCounter } from '@shined/react-use';
+
+function App() {
+  const [count, actions] = useCounter(0)
+  useIntervalFn(actions.inc, 1000)
+  return <Text>Count: {count}</Text>
+}
+
+render(<App />);
+```
+
+</div>
+
+---
+layout: iframe-right
+url: https://sheinsight.github.io/react-use/
+---
+
+# 交互式文档
+
+- 高质量的上手指南
+- 中英文双语支持
+- 交互式在线 Demo
+- 规范化的 API 说明
+- 源码一站式直达
+
+<img src="/doc-well-group.png" class='mt-4 w-300px rounded' v-click />
+
+---
+
+# 出色的开发体验 (DX)
+
+<v-click at="1">
+
+- 全面使用 <code>TypeScript</code>
+- 辅以 <code>JSDoc</code> 注释
+- 提倡“代码即文档”，减少上下文切换
+
+</v-click>
+
+<div v-click="1" class='mt-8'>
+
+```tsx twoslash
+import { useBluetooth } from '@shined/react-use'
+
+function App() {
+  const bluetooth = useBluetooth({
+    acceptAllDevices: true,
+    optionalServices: ['battery_service', 'device_information'],
+    immediate: false,
+  })
+}
+```
+
+<!-- <v-click at="1">
+
+<div class='flex flex-col gap-4'>
+  <img class='h-48 mt-8 rounded-md' src='/code-is-doc-1.png' />
+  <img class='h-48 mt-8 rounded-md' src='/code-is-doc-2.png' />
+</div>
+
+</v-click>  -->
+
+</div>
+
+---
+layout: center
+---
+
+# @shined/react-use 的现代化配置
+
+---
+layout: two-cols
+---
+
+<div class='flex flex-col gap-12 mt-12'>
+  <v-clicks>
+  <div class='flex items-center'>
+    <span>仓库结构：</span>
+    <vscode-icons-file-type-light-pnpm class="size-8 mx-2" /> pnpm + 
+    <vscode-icons-file-type-git class="size-8 mx-2" /> Monorepo
+  </div>
+  <div class='flex items-center'>
+    <span>版本锁定：</span>
+    <vscode-icons-file-type-node class="size-8 mx-2" /> .node-version + 
+    <vscode-icons-folder-type-package class="size-8 mx-2" /> pkgMgr
+  </div>
+  <div class='flex items-center'>
+    <span>格式化和规范检查：</span>
+    <vscode-icons-file-type-biome class="size-8 mx-2" /> Biome +
+    <img src="/oxlint.svg" class="inline size-8 mx-2" /> oxlint
+  </div>
+  <div class='flex items-center'>
+    <span>文档与示例：</span>
+    <img src="/docusaurus.svg" class="inline size-8 mx-2" /> Docusaurus + 
+    <vscode-icons-file-type-mdx class="size-8 mx-2" /> MDX
+  </div>
+  <div class='flex items-center'>
+    <span>Demo 布局与样式：</span>
+    <vscode-icons-file-type-unocss class="size-8 mx-2" /> UnoCSS
+  </div>
+  </v-clicks>
+</div>
+
+::right::
+
+<div class='flex flex-col gap-12 mt-12'>
+  <v-clicks>
+    <div class='flex items-center'>
+    <span>测试与打包：</span>
+    <vscode-icons-file-type-vitest class="size-8 mx-2" /> Vitest +
+    <vscode-icons-file-type-esbuild class="size-8 mx-2" /> tsup (esbuild)
+  </div>
+  <div class='flex items-center'>
+    <span>代码质量保障：</span>
+    <vscode-icons-folder-type-husky class="size-8 mx-2" /> Husky + 
+    <img src="/lint-staged.png" class="inline size-8 mx-2" /> Lint Staged
+  </div>
+  <div class='flex items-center'>
+    <span>约定式提交：</span>
+    <img src="/conventional-commit.png" class="rounded inline size-8 mx-2" /> Conventional Commit
+  </div>
+  <div class='flex items-center'>
+    <span>发布：</span>
+    <vscode-icons-folder-type-github class="size-8 mx-2" /> GitHub Release
+    <img src="/changelog.svg" class="inline size-8 mx-2" /> <code>CHANGELOG.md</code>
+  </div>
+  <div class='flex items-center'>
+    <span>供应链安全：</span>
+    <img src="/github-action.svg" class="inline size-8 mx-2" /> Action + 
+    <mdi-verified class="text-[#327532] size-8 mx-2" /> npm Provenance
+  </div>
+  </v-clicks>
+</div>
+
+---
+layout: center
+---
+
+# 一些思考
+
+---
+
+# State vs Ref
+
+- 全局变量对于所有组件实例都是共享的，导致组件之间的状态混乱
+- 渲染阶段会在每次更新时被执行，let 和 const 会被重新声明
+- 遵循组件生命周期且多次渲染仍稳定存在的“状态”：State 和 Ref
+- State 的更改会触发组件的重新渲染，而 Ref 的更改则不会
+
+```tsx
+// 只会被声明一次，但会被所有组件实例共享
+let globalCount = 0 
+
+function Counter() {
+  // 每次渲染都会被重新声明
+  let count = 0 
+
+  // 只会被声明一次，更改不会触发重新渲染
+  const countRef = useRef(0) 
+  
+  // 只会被声明一次，更改会触发重新渲染
+  const [count, setCount] = useState(0) 
+
+  // ...
+}
+```
+
+---
+
+# State
+
+- A state variable to retain the data between renders.
+
+> 用于保留渲染之间数据的状态变量。
+
+- A state setter function to update the variable and trigger React to render the component again.
+
+> 一个状态设置函数，用于更新变量并触发 React 再次渲染组件。
+
+<br />
+
+# Ref
+
+- You can store information between re-renders (unlike regular variables, which reset on every render).
+
+> 可以在重新渲染之间存储信息（不同于在每次渲染时重置的常规变量）。
+
+- Changing it does not trigger a re-render (unlike state variables, which trigger a re-render).
+
+> 更改它不会触发重新渲染（与触发重新渲染的状态变量不同）。
+
+- The information is local to each copy of your component (unlike the variables outside, which are shared).
+
+> 该信息对于组件的每个副本都是本地的（不像外部变量，它们是共享的）。
+
+---
+
+# isActive (Ref Getter)
+
+兼具存储信息与渲染优化的取舍与妥协
+
+```ts
+// const pausable = usePausable(); // { isActive, resume, pause }
+
+const { isActive, resume, pause } = useIntervalFn(() => {
+  // do something
+}, 1000)
+
+function handleClick() {
+  if (isActive()) {
+    // do something when active
+  }
+}
+```
+
+---
+
+# isActive 的内部
+
+<br />
+
+```ts
+const isActive = () => ref.current
+const isSupported = () => ref.current
+```
+
+<br />
+
+<div v-click>这就结束了？</div>
+
+<br />
+
+<div v-click>
+
+```tsx
+const isActive = useStableFn(() => ref.current)
+const isSupported = useStableFn(() => ref.current)
+```
+
+</div>
+
+<br />
+
+<div v-click>
+
+```tsx
+const [isActiveRef, isActive] = useGetterRef(false)
+```
+
+</div>
+
+---
+
+# useSafeState 做了什么
+
+- React 18 及以上版本允许卸载后 setState
+- 可选的 deep 优化，默认 false
+
+---
+
+# 关于 React 19
+
+---
+
+# 使用预测
+
+预测业务开发中最可能常用的 Hooks
+
+- 生命周期：useMount / useUnmount / useEffectOnce / useUpdateEffect
+- 状态相关：useSafeState / useSetState / useToggle / useCircularList
+- loading：useAsyncFn (useLoadingFn) / createSingleLoading
+- 节流/防抖/定时器：useDebounceFn / useThrottleFn / useIntervalFn (支持 RAF)
+- 强业务/场景化：useInfiniteScroll / useMultiSelect / useDynamicList / useCountdown
+- 时间格式化：useDateFormat (dayjs、moment、date-fns 简单使用场景的平替)
+- 复制操作：useClipboard (读、写，自动降级到 <code>document.exec('copy')</code>)
+- 上层封装/Hooks 老手: useStableFn / useLatest / useCreation
+
+---
+
+# Hooks 的后续规划
+
+- 起步期（当前）：原子化为主，覆盖大部分场景，已生产可用 （137 个）
+- 业务强化期：封装强业务的上层 Hooks，做到 「常见场景，一行代码开箱即用」
+- 生态完善期：与 shineout 等主流库做集成联动，简化业务开发，扩大生态
+
+---
+
+# 回顾
+
+---
+layout: end
+---
+
+# The End
