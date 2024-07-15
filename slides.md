@@ -664,21 +664,6 @@ render(<App />);
 <tip v-click>只要能用 <b>useEffect</b> 的地方，就能用 <b>@shined/react-use</b></tip>
 
 ---
-layout: iframe-right
-url: https://sheinsight.github.io/react-use/
----
-
-# 交互式文档
-
-- 中英文双语支持
-- 高质量的上手指南
-- 交互式在线 Demo
-- 源码一站式直达
-- 规范化的 API 说明
-
-<img src="/doc-well-group.png" class='mt-4 w-300px rounded' v-click />
-
----
 
 # 出色的开发体验 (DX)
 
@@ -776,11 +761,11 @@ layout: two-cols
     <vscode-icons-folder-type-github class="size-8 mx-2" /> GitHub Release +
     <img src="/changelog.svg" class="inline size-8 mx-2" /> <code>CHANGELOG.md</code>
   </div>
-  <div class='flex items-center'>
+  <!-- <div class='flex items-center'>
     <span>供应链安全：</span>
     <img src="/github-action.svg" class="inline size-8 mx-2" /> Action + 
     <mdi-verified class="text-[#327532] size-8 mx-2" /> npm Provenance
-  </div>
+  </div> -->
 </div>
 </v-clicks>
 
@@ -1139,7 +1124,7 @@ layout: center
   - 提出 「逻辑组件 (Hooks)」 概念，Hooks 可以被按需组合
   - 改进 useCounter，了解 Hooks 的常见陷阱与最佳实践
 - <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code>
-  - 全面、轻量、灵活、高度优化、多环境友好、交互式文档、出色的开发体验、现代化配置
+  - 全面、轻量、灵活、高度优化、多环境友好、出色的开发体验、现代化配置
 - 一些思考
   - State 和 Ref 的特点与取舍 
   - 提出 Ref Getter，兼具存储信息与渲染优化
