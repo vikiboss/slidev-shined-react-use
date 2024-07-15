@@ -669,11 +669,11 @@ url: https://sheinsight.github.io/react-use/
 
 # 交互式文档
 
-- 高质量的上手指南
 - 中英文双语支持
+- 高质量的上手指南
 - 交互式在线 Demo
-- 规范化的 API 说明
 - 源码一站式直达
+- 规范化的 API 说明
 
 <img src="/doc-well-group.png" class='mt-4 w-300px rounded' v-click />
 
@@ -683,8 +683,7 @@ url: https://sheinsight.github.io/react-use/
 
 <v-click at="1">
 
-- 全面使用 <code>TypeScript</code>
-- 辅以 <code>JSDoc</code> 注释
+- 全面使用 <code>TypeScript</code>，辅以 <code>JSDoc</code> 注释
 - 提倡“代码即文档”，减少上下文切换
 
 </v-click>
@@ -797,7 +796,7 @@ layout: center
 State 和 Ref 都可以用来保存信息，该如何抉择
 
 - 全局变量对于所有组件实例都是共享的，导致组件之间的状态混乱
-- 渲染阶段会在每次更新时被执行，let 和 const 会被重新声明
+- 渲染阶段会在每次更新时被执行，<code>let</code> 和 <code>const</code> 会被重新声明
 - 遵循组件生命周期且多次渲染仍稳定存在的“状态”：State 和 Ref
 - State 的更改会触发组件的重新渲染，而 Ref 的更改则不会
 
@@ -900,13 +899,13 @@ layout: center
 
 # 问题背景
 
-- 组件卸载后执行 setState，React 会抛出警告
-- 本质上，组件卸载后执行的 setState 只是一个 noop (空函数)
+- 在一个 React 组件卸载后执行 <code>setState</code>，React 会抛出警告
+- 本质上，组件卸载后执行的 <code>setState</code> 只是一个 <code>noop</code> (空函数)
 - 抛出的警告并不意味着内存泄漏，只是在提醒你清理定时器、订阅函数等可能导致内存泄漏的操作
 - React 官方意识到了这个警告的不准确，从 React 18 开始移除了它
-- 官方指出，组件卸载后应当执行 setState，未来可能会有「状态保持」等特性依赖于此
-- 这个时候卸载后的 setState 将有意义，换句话说，卸载后不执行 setState 将会导致更严重的问题
-- 因而在没有抛出警告时，不应当拦截 setState 操作（尽管目前而言只是 noop，没有实际意义）
+- 官方指出，组件卸载后应当执行 <code>setState</code>，未来可能会有「状态保持」等特性依赖于此
+- 这个时候卸载后的 <code>setState</code> 将有意义，换句话说，卸载后不执行 <code>setState</code> 将会导致更严重的问题
+- 因而在没有抛出警告时，不应当拦截 <code>setState</code> 操作（尽管目前而言只是 <code>noop</code>，没有实际意义）
 - 更多讨论可以参考 [React Discussion #82](https://github.com/reactwg/react-18/discussions/82)
 
 <img src="/set-state.png" class='mt-4 h-160px rounded' v-click />
@@ -920,10 +919,11 @@ layout: center
 
 ## @shined/react-use 的做法
 
-- 行为依版本而不同
-  - React 18 及以上版本，不做任何处理，等同于 useState，遵循官方推荐做法
-  - React 17 及以下版本，组件卸载后，不执行 setState，以抑制抛出的警告
-- 新增了可选的 deep 选项，用于深度对比并决定是否更新，默认 false，具备渲染优化
+- 具体行为依 React 版本不同而不同
+  - React 17 及以下版本（会抛出警告），组件卸载后，不执行 setState，以抑制抛出的警告
+  - React 18 及以上版本（警告被移除），不做任何处理，等同于 useState，遵循官方推荐做法
+- 新增了可选的 deep 选项
+  - 用于深度对比并决定是否更新，默认 false，具备渲染优化
 
 <br />
 
@@ -931,7 +931,6 @@ layout: center
 
 ```tsx
 const [value, setValue] = useSafeState({ count: 1 }, { deep: true })
-
 setValue({ count: 1}) // 更新 「同样」 的对象，如果未设置 deep，将触发组件重新更新
 ```
 
@@ -945,9 +944,73 @@ layout: center
 
 # 单一职责
 
+一次只做一件事，并把它做好
+
 ---
 
-# 一次只做一件事，并把它做好
+# 一套合格的乐高积木应该是什么样子？
+
+<div class='flex gap-6' v-click>
+  <img src='/lego-1.jpeg' class='h-48 rounded' />
+  <img src='/lego-2.png' class='h-48 rounded' />
+</div>
+
+<tip v-click>多而全：零件种类多 (不管是功能还是颜色)、各司其职，得以实现各种各样的奇思妙想</tip>
+<tip v-click>灵活可插拔：已经组装好的结构可再次拆卸或复用，或者能找到对应部件并能再次组装</tip>
+
+---
+layout: center
+---
+
+# 逻辑组件 (Hooks) 应当像乐高积木一样
+
+灵活、可插拔、各司其职
+
+---
+
+# ahooks 的缺陷
+
+<br />
+
+<v-clicks>
+
+- 覆盖面较广 (70+)，但仍缺乏许多常见场景的 Hooks
+  - 复制操作、剪切板读写
+  - 时间格式化
+  - 浏览器内存、FPS
+- 一个 Hook 里面包含了大量不可复用的逻辑，导致难以进行复用和组合
+  - 如: useRequest 内部包含了 loading、error、data、run、retry、cancel、refresh 等逻辑
+  - 如: usePagination 其实是 useRequest 的上层封装，而不是字面上的“分页”逻辑
+  - 如: useInfiniteScroll 把所有状态都内聚了，对外部 store 等情况支持不友好
+
+</v-clicks>
+
+<tip v-click>给你一套数量不算多的乐高零件，另外加几辆「预装好但是用 502 粘牢了」的大汽车，你还不能拆</tip>
+<tip v-click>零件还算完善，大汽车在多数情况下也跑的很快，但一旦想加零件或者拆掉不要的，就会玩的很难受</tip>
+
+---
+layout: two-cols-header
+---
+
+# @shined/react-use 的优势
+
+::left::
+
+<v-clicks>
+
+- 逻辑组件 (Hooks) 的单一职责
+  - 一个 Hook 只做一件事，且做到极致
+  - 如: useClipboard 处理剪贴板读、写，支持常见相关操作与自动降级
+  - 如: usePagination 如其名，只提供分页状态和操作，无额外逻辑
+  - 如: useInfiniteScroll 只做滚动加载逻辑，精确提供加载回调和滚动状态，业务逻辑交由用户自由处理
+- 逻辑组件 (Hooks) 的按需组合
+  - Hooks 细致拆分、按需组合，而不是一个 Hooks 内聚大量业务逻辑和状态
+
+</v-clicks>
+
+::right::
+
+<img v-click src='/use-element-by-pointer.png' class='mx-4 h-80 rounded' />
 
 ---
 layout: center
