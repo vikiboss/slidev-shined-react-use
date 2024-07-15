@@ -992,7 +992,7 @@ layout: center
 layout: two-cols-header
 ---
 
-# @shined/react-use 的优势
+# @shined/react-use 的做法
 
 ::left::
 
@@ -1019,6 +1019,40 @@ layout: center
 # 关于 React 19
 
 ---
+
+# React 19 主要更新速览
+
+<v-clicks>
+
+- 引入了 「Actions」
+  - startTransition 支持异步操作，自动处理状态、错误、乐观更新等
+- 新 Hooks
+  - useOptimistic, useActionState (前 useFormState), useFormStatus
+- 新 API
+  - use 用于消费渲染过程中的资源 (如: 非渲染过程中创建的 Promise)
+- 新的范式
+  - React Server Components + Server Actions
+- 其他改进: 
+  - 废弃 forwardRef, ref 可直接作为 props 传递, ref 参数回调支持清理函数
+  - Context 可以替代 Context.Provider 直接进行渲染
+  - 更多 Document Metadata 的支持，直接编写 title, link, meta 等元素
+  - 全面支持 HTML 原生自定义组件 (Custom Elements)
+
+</v-clicks>
+
+---
+
+- 两个事实
+  - React 19 到目前为止，仍未发布正式版本 (现在仍是 RC 版本)
+  - React 19 最重要的改动是新增的几个 Hooks，实际业务价值有限
+    - 针对 form 和异步网络请求通用能力的封装，与 form 耦合严重
+    - 对于实际业务使用成本相对较高 (自定义操作需要用 startTransition 包裹)
+- 一个现实
+  - React 19 包含 Breaking Change 的新特性和变更
+    - 这些变更在短期内对公司项目来说改造和升级不太容易
+    - 如：React 19 废弃了 defaultProps，shineout@3 中仍有使用
+
+<tip v-click>针对 React 19 的 Hooks 开发有必要，但是相对而言优先级不高，会放到后续阶段进行跟进</tip>
 
 ---
 layout: center
@@ -1090,7 +1124,7 @@ layout: center
   - Ref Getter，兼具存储信息与渲染优化
   - useSafeState 的设计与思考
   - 单一职责 (逻辑组件的按需组合)
-  - React 19
+  - React 19 特性和业务价值
 - 使用预测及后续规划
 
 </v-clicks>
