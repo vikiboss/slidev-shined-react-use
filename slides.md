@@ -45,9 +45,9 @@ layout: center
 
 - 2018 年 02 月 —— React Context API 发布 (v16.3)
 
-- **<span v-mark="{ at: 11, color:'#f59e0b', type: 'underline' }">2018 年 10 月 —— React Hooks 提案</span>**
+- **<span v-mark="{ at: 11, color: '#f59e0b', type: 'underline' }">2018 年 10 月 —— React Hooks 提案</span>**
 
-- **<span v-mark="{ at: 11, color:'#f59e0b', type: 'underline' }">2019 年 02 月 —— React Hooks 正式发布 (v16.8)</span>**
+- **<span v-mark="{ at: 11, color: '#f59e0b', type: 'underline' }">2019 年 02 月 —— React Hooks 正式发布 (v16.8)</span>**
 
 - 2020 年 05 月 —— React JSX-Runtime (v17)
 
@@ -1013,12 +1013,12 @@ layout: two-cols-header
 
 <v-clicks>
 
-- 逻辑组件 (Hooks) 的<span v-mark="4">单一职责</span>
+- 逻辑组件 (Hooks) 的<span v-mark="{ at: 4, color: '#f59e0b', type: 'underline'}">单一职责</span>
   - 一次只做一件事，且做到极致
   - 如: useClipboard 处理剪贴板读、写，支持常见相关操作与自动降级
   - 如: usePagination 如其名，只提供分页状态和操作，无额外逻辑
   - 如: useInfiniteScroll 只做滚动加载逻辑，精确提供加载回调和滚动状态，业务逻辑交由用户自由处理
-- 逻辑组件 (Hooks) 的<span v-mark="5">按需组合</span>
+- 逻辑组件 (Hooks) 的<span v-mark="{ at: 5, color: '#f59e0b', type: 'underline'}">按需组合</span>
   - Hooks 细致拆分、按需组合，而不是一个 Hooks 内聚大量业务逻辑和状态
 
 </v-clicks>
@@ -1059,6 +1059,8 @@ layout: center
 
 # React 19 现状
 
+<v-clicks>
+
 - 两个事实
   - React 19 到目前为止，仍未发布正式版本 (现在仍是 RC 版本)
   - React 19 最重要的改动是新增的几个 Hooks，实际业务价值有限
@@ -1068,6 +1070,8 @@ layout: center
   - React 19 包含 Breaking Change 的新特性和变更
     - 这些变更在短期内对公司项目来说改造和升级不太容易
     - 如：React 19 废弃了 defaultProps，shineout@3 中仍有使用
+
+</v-clicks>
 
 <tip v-click>针对 React 19 的 Hooks 开发有必要，但是相对而言优先级不高，会放到后续阶段进行跟进</tip>
 
