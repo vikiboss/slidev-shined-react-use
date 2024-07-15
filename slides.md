@@ -216,7 +216,7 @@ layout: center
 
 <div class='mb-8'>
   <div v-if="$clicks === 0">✅ 运行良好</div>
-  <div v-if="$clicks === 1">🆕 新需求：首次 +1，此后每间隔固定时间 +1</div>
+  <div v-if="$clicks === 1">🆕 新场景：首次 Mount +1，此后每间隔固定时间 +1</div>
   <div v-if="$clicks === 2">😨 组件死循环了，为什么？</div>
   <div v-if="$clicks === 3">🐛 罪魁祸首：<code>add</code> 函数每次渲染都会重新创建</div>
   <div v-if="$clicks === 4">😎 小意思，上 <code>useMemoizedFn</code></div>
@@ -233,10 +233,11 @@ layout: center
   <div v-if="$clicks === 16">🪄 <code>useLatest</code> 派上用场</div>
   <div v-if="$clicks === 17">🤌 收拢状态和操作，统一返回风格</div>
   <div v-if="$clicks === 18">📌 <code>actions</code> 对象也需要保持引用稳定，同时优化参数和命名</div>
-  <div v-if="$clicks === 19">🥳 一个成熟的 <code>useCounter</code> 大功告成！</div>
-  <div v-if="$clicks === 20">🔍 看起来貌似没变化，但是内部已经做了大量优化</div>
-  <div v-if="$clicks === 21">🫣 这基本就是 <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code> 库里的 <code>useCounter</code> 的核心</div>
-  <div v-if="$clicks === 22">22</div>
+  <div v-if="$clicks === 19">😇 继续完善 TypeScript 类型、JSDoc 注释，并统一命名</div>
+  <div v-if="$clicks === 20">🥳 一个成熟的 <code>useCounter</code> 大功告成！</div>
+  <div v-if="$clicks === 21">🔍 看起来貌似没变化，但是内部已经做了大量优化</div>
+  <div v-if="$clicks === 22">🫣 这基本就是 <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code> 库里的 <code>useCounter</code> 的核心</div>
+  <div v-if="$clicks === 23">22</div>
 </div>
 
 ````md magic-move
@@ -461,7 +462,7 @@ function useCounter(initialCount = 0) {
 }
 ```
 
-```tsx {5,6,15,16|*}
+```tsx {5,6,15,16}
 function useCounter(initialCount = 0) {
   const [initial, setInitial] = useSafeState(initialCount)
   const [count, setCount] = useSafeState(initial)
@@ -482,6 +483,29 @@ function useCounter(initialCount = 0) {
 ```
 
 ```tsx
+export interface UseCounterReturnsAction {
+  /**
+   * increment the counter
+   * @param {number} [delta] - The increment value
+   */
+  inc: (delta?: number) => void
+  /**
+   * decrement the counter
+   * @param {number} [delta] - The decrement value
+   */
+  dec: (delta?: number) => void
+  /**
+   * reset the counter
+   * @param {number} [n] - The reset value
+   */
+  reset: (n?: number) => void
+}
+
+export type Count = number
+export type UseCounterReturns = readonly [Count, UseCounterReturnsAction]
+```
+
+```tsx {*|}
 function Counter() {
   const [count, actions] = useCounter(0)
   return (
@@ -995,10 +1019,6 @@ layout: center
 - **Hooks 老手/上层封装**: useStableFn / useLatest / useCreation
 
 </v-clicks>
-
-<!--
-的点点滴滴
--->
 
 ---
 layout: center
