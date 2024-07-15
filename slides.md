@@ -31,6 +31,8 @@ layout: center
 
 ---
 
+# React 的重要事件节点
+
 <v-clicks>
 
 - 2013 年 05 月 —— React 正式开源 (v0.7)
@@ -54,17 +56,16 @@ layout: center
 - 2024 年 04 月 —— React Server Component 发布 (v19 RC)
 
 </v-clicks>
-...
 
 ---
 layout: center
 ---
 
-# Function Component + Hooks 成为主流
+# 函数组件 (Function Component) + Hooks 成为主流
 
 ---
 
-## Class Component
+## 类组件 (Class Component)
 
 ```tsx twoslash
 // === before ===
@@ -85,7 +86,7 @@ class Counter extends Component {
 
 <v-click>
 
-## Function Component
+## 函数组件 (Function Component) + Hooks
 
 ```tsx twoslash
 // === after ===
@@ -110,7 +111,7 @@ function Counter() {
   - 上下文 (useContext)
   - ...
 
-- 提高了开发体验
+- 提高了开发体验 (DX)
   - 改善了代码的组织和复用性
   - 使得代码逻辑更易于理解
   - 使得代码更容易测试
@@ -613,10 +614,10 @@ if (isActive()) {
 
 ---
 
-# 高度优化 + 最佳实践
+# 高度优化
 
 <v-click at="1">
-  <code>Safe State</code>、<code>Latest Value</code>、<code>Stabilization</code> 等。
+包括但不限于 <code>Safe State</code>、<code>Latest Value</code>、<code>Stabilization</code> 等最佳实践。
 </v-click>
 
 <div v-click class='mt-8'>
@@ -684,7 +685,7 @@ url: https://sheinsight.github.io/react-use/
 <v-click at="1">
 
 - 全面使用 <code>TypeScript</code>，辅以 <code>JSDoc</code> 注释
-- 提倡“代码即文档”，减少上下文切换
+- 提倡“代码即文档”，减少上下文切换干扰
 
 </v-click>
 
@@ -723,8 +724,8 @@ layout: center
 layout: two-cols
 ---
 
+<v-clicks>
 <div class='flex flex-col gap-12 mt-12'>
-  <v-clicks>
   <div class='flex items-center'>
     <span>仓库结构：</span>
     <vscode-icons-file-type-light-pnpm class="size-8 mx-2" /> pnpm + 
@@ -749,14 +750,14 @@ layout: two-cols
     <span>Demo 布局与样式：</span>
     <vscode-icons-file-type-unocss class="size-8 mx-2" /> UnoCSS
   </div>
-  </v-clicks>
 </div>
+</v-clicks>
 
 ::right::
 
+<v-clicks>
 <div class='flex flex-col gap-12 mt-12'>
-  <v-clicks>
-    <div class='flex items-center'>
+  <div class='flex items-center'>
     <span>测试与打包：</span>
     <vscode-icons-file-type-vitest class="size-8 mx-2" /> Vitest +
     <vscode-icons-file-type-esbuild class="size-8 mx-2" /> tsup (esbuild)
@@ -780,8 +781,8 @@ layout: two-cols
     <img src="/github-action.svg" class="inline size-8 mx-2" /> Action + 
     <mdi-verified class="text-[#327532] size-8 mx-2" /> npm Provenance
   </div>
-  </v-clicks>
 </div>
+</v-clicks>
 
 ---
 layout: center
@@ -795,6 +796,9 @@ layout: center
 
 State 和 Ref 都可以用来保存信息，该如何抉择
 
+<v-click>
+
+- 组件的状态大致有四种: 全局状态、局部变量、Ref、State
 - 全局变量对于所有组件实例都是共享的，导致组件之间的状态混乱
 - 渲染阶段会在每次更新时被执行，<code>let</code> 和 <code>const</code> 会被重新声明
 - 遵循组件生命周期且多次渲染仍稳定存在的“状态”：State 和 Ref
@@ -815,6 +819,8 @@ function Counter() {
 }
 ```
 
+</v-click>
+
 ---
 
 # State
@@ -827,7 +833,7 @@ function Counter() {
 
 # Ref
 
-- 可以在重新渲染之间存储信息 (渲染稳定，不像局部变量)。
+- 可以在重新渲染之间存储信息 (渲染稳定)。
 - 该信息对于组件的每个副本都是本地的 (实例隔离)。
 - 更改它不会触发重新渲染 (不触发渲染，与 State 不同)。
 
@@ -849,6 +855,9 @@ function handleClick() {
     // do something when active
   }
 }
+
+pause(); // will not trigger re-render
+pause(true); // will trigger re-render
 ```
 
 <tip v-click><b>isActive</b> 状态的变更，默认不会触发重新渲染，值可通过 Getter 函数获取</tip>
@@ -879,6 +888,10 @@ const isActive = useStableFn(() => ref.current)
 
 <br />
 
+<div v-click>还没结束。</div>
+
+<br />
+
 <div v-click>
 
 ```tsx
@@ -887,7 +900,7 @@ const [isActiveRef, isActive] = useGetterRef(false)
 
 </div>
 
-<tip v-click>利用 <b>useGetterRef</b> 来创建 Ref Getter，底层使用 Ref 而不是 State</tip>
+<tip v-click>利用 <b>useGetterRef</b> 来创建 Ref Getter，底层使用 Ref 而不是 State 以优化性能</tip>
 
 ---
 layout: center
@@ -899,7 +912,7 @@ layout: center
 
 # 问题背景
 
-- 在一个 React 组件卸载后执行 <code>setState</code>，React 会抛出警告
+- 在一个 React 组件卸载后执行 <code>setState</code>，React (<=17) 会抛出警告
 - 本质上，组件卸载后执行的 <code>setState</code> 只是一个 <code>noop</code> (空函数)
 - 抛出的警告并不意味着内存泄漏，只是在提醒你清理定时器、订阅函数等可能导致内存泄漏的操作
 - React 官方意识到了这个警告的不准确，从 React 18 开始移除了它
@@ -948,7 +961,7 @@ layout: center
 
 ---
 
-# 一套合格的乐高积木应该是什么样子？
+# 一套优秀的乐高积木应该是什么样子？
 
 <div class='flex gap-6' v-click>
   <img src='/lego-1.jpeg' class='h-48 rounded' />
@@ -964,29 +977,31 @@ layout: center
 
 # 逻辑组件 (Hooks) 应当像乐高积木一样
 
-灵活、可插拔、各司其职
+各司其职、灵活、可插拔
 
 ---
 
 # ahooks 的缺陷
 
-<br />
-
 <v-clicks>
 
 - 覆盖面较广 (70+)，但仍缺乏许多常见场景的 Hooks
   - 复制操作、剪切板读写
-  - 时间格式化
-  - 浏览器内存、FPS
-- 一个 Hook 里面包含了大量不可复用的逻辑，导致难以进行复用和组合
+  - 浏览器内存、FPS 等各种浏览器 API
+  - 时间格式化等其他常见的 util
+- 一个 Hook 里面包含了许多耦合的逻辑，导致难以进行拆分、复用和组合
   - 如: useRequest 内部包含了 loading、error、data、run、retry、cancel、refresh 等逻辑
-  - 如: usePagination 其实是 useRequest 的上层封装，而不是字面上的“分页”逻辑
+- Hooks 的职责和命名不够明确，边界模糊
   - 如: useInfiniteScroll 把所有状态都内聚了，对外部 store 等情况支持不友好
+  - 如: usePagination 其实是 useRequest 的上层封装，而不是字面上的“分页”逻辑
 
 </v-clicks>
 
-<tip v-click>给你一套数量不算多的乐高零件，另外加几辆「预装好但是用 502 粘牢了」的大汽车，你还不能拆</tip>
-<tip v-click>零件还算完善，大汽车在多数情况下也跑的很快，但一旦想加零件或者拆掉不要的，就会玩的很难受</tip>
+<div class='mt-6 font-bold' v-click>
+一套数量够用的乐高零件，附带几辆「预装好了但是用胶水粘牢了」的大汽车，难以拆分和重组
+</div>
+
+<tip v-click>零件相对完善，大汽车在多数情况下也跑的很快，但丢失了乐高积木的灵活性和趣味性</tip>
 
 ---
 layout: two-cols-header
@@ -998,12 +1013,12 @@ layout: two-cols-header
 
 <v-clicks>
 
-- 逻辑组件 (Hooks) 的单一职责
-  - 一个 Hook 只做一件事，且做到极致
+- 逻辑组件 (Hooks) 的<span v-mark="4">单一职责</span>
+  - 一次只做一件事，且做到极致
   - 如: useClipboard 处理剪贴板读、写，支持常见相关操作与自动降级
   - 如: usePagination 如其名，只提供分页状态和操作，无额外逻辑
   - 如: useInfiniteScroll 只做滚动加载逻辑，精确提供加载回调和滚动状态，业务逻辑交由用户自由处理
-- 逻辑组件 (Hooks) 的按需组合
+- 逻辑组件 (Hooks) 的<span v-mark="5">按需组合</span>
   - Hooks 细致拆分、按需组合，而不是一个 Hooks 内聚大量业务逻辑和状态
 
 </v-clicks>
@@ -1042,6 +1057,8 @@ layout: center
 
 ---
 
+# React 19 现状
+
 - 两个事实
   - React 19 到目前为止，仍未发布正式版本 (现在仍是 RC 版本)
   - React 19 最重要的改动是新增的几个 Hooks，实际业务价值有限
@@ -1062,7 +1079,7 @@ layout: center
 
 ---
 
-# 常用 Hooks
+# Hooks 使用引导 / 高频预测
 
 <v-clicks>
 
@@ -1073,7 +1090,7 @@ layout: center
 - **强业务/场景化**：useInfiniteScroll / useMultiSelect / useDynamicList / useCountdown
 - **时间格式化**：useDateFormat (dayjs、moment、date-fns 简单使用场景的平替)
 - **复制操作 (剪贴板)**：useClipboard (读、写，自动降级到 <code>document.exec('copy')</code>)
-- **Hooks 老手/上层封装**: useStableFn / useLatest / useCreation
+- **Hooks 老手/上层封装**: usePausable / useStableFn / useLatest / useCreation / useSupported
 
 </v-clicks>
 
@@ -1114,14 +1131,14 @@ layout: center
 <v-clicks>
 
 - Hooks 与 「逻辑组件」
-  - React 的重要时间节点，Hooks 开发成为主流
+  - React 的重要事件节点，Hooks 开发成为主流
   - 提出 「逻辑组件 (Hooks)」 概念，Hooks 可以被按需组合
   - 改进 useCounter，了解 Hooks 的常见陷阱与最佳实践
 - <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code>
   - 全面、轻量、灵活、高度优化、多环境友好、交互式文档、出色的开发体验、现代化配置
 - 一些思考
   - State 和 Ref 的特点与取舍 
-  - Ref Getter，兼具存储信息与渲染优化
+  - 提出 Ref Getter，兼具存储信息与渲染优化
   - useSafeState 的设计与思考
   - 单一职责 (逻辑组件的按需组合)
   - React 19 特性和业务价值
