@@ -549,50 +549,10 @@ layout: center
 一个 SSR 友好、全面、标准化和高度优化的 React Hooks 库
 </v-click>
 
-
 ---
 
-<div>
-  <div class="flex flex-col justify-center my-8" >
-    <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-24 mb-4" />
-    <div class='text-center'><code>@shined/react-use</code></div>
-  </div>
-  <div class='size-full text-2xl flex flex-col justify-center items-center'>
-    <div class='flex gap-6 my-6'>
-      <div class='w-48 group'>
-        <mdi-sparkles-outline class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Animation
-      </div>
-      <div class='w-48 group'>
-        <mdi-google-chrome class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Browser
-      </div>
-      <div class='w-48 group'>
-        <mdi-hexagon-slice-6 class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Element
-      </div>
-    </div>
-    <div class='flex gap-6 my-6'>
-      <div class='w-48 group'>
-        <mdi-react class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Lifecycle
-      </div>
-      <div class='w-48 group'>
-        <mdi-internet class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Network
-      </div>
-      <div class='w-48 group'>
-        <mdi-toolbox-outline class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />ProUtilities
-      </div>
-    </div>
-    <div class='flex gap-6 my-6'>
-      <div class='w-48 group'>
-        <mdi-access-point class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Sensors
-      </div>
-      <div class='w-48 group'>
-        <mdi-atom class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />State
-      </div>
-      <div class='w-48 group'>
-        <mdi-tools class='mx-2 text-[#2e8555]/80 group-hover:text-amber/80' />Utilities
-      </div>
-    </div>
-  </div>
-</div>
+<feature />
+
 ---
 layout: center
 ---
