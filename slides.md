@@ -1,4 +1,4 @@
----
+```yaml
 title: React Hooks 库的探索与思考
 class: text-center
 layout: cover
@@ -7,7 +7,7 @@ background: https://proxy.viki.moe/photo-1456362150245-7f7d7ed8ebae?proxy-host=i
 defaults:
   highlighter: shiki
   transition: fade-out
----
+```
 
 # React Hooks 库的探索与思考
 
@@ -17,11 +17,13 @@ defaults:
   <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-24" />
 </div>
 
-<code><a href="https://sheinsight.github.io/react-use">@shined/react-use</a></code> v1 正式版已发布！🎉
+<code><a href="https://sheinsight.github.io/react-use" class='text-dark dark:text-white'>@shined/react-use</a></code> v1 正式版已发布！🎉
 
 ---
+
+```yaml
 layout: center
----
+```
 
 <div class='text-center'>
   <mdi-react class='my-4 size-16' />
@@ -58,8 +60,10 @@ layout: center
 </v-clicks>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 函数组件 (Function Component) + Hooks 成为主流
 
@@ -106,12 +110,14 @@ function Counter() {
 <v-clicks>
 
 - 函数组件拥有了此前只有类组件才有的能力
+
   - 状态管理 (useState)
   - 生命周期 (useEffect)
   - 上下文 (useContext)
   - ...
 
 - 提高了开发体验 (DX)
+
   - 改善了代码的组织和复用性
   - 使得代码逻辑更易于理解
   - 使得代码更容易测试
@@ -140,14 +146,18 @@ function Counter() {
 - ...
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 「逻辑组件」
 
 ---
+
+```yaml
 layout: two-cols
----
+```
 
 # 一个简单的 Counter 组件
 
@@ -167,7 +177,7 @@ function Counter() {
 }
 ```
 
-```tsx {*|}
+```tsx {*|none}
 function useCounter(initialCount = 0) {
   const [count, setCount] = useState(initialCount)
   const add = () => setCount(count + 1)
@@ -188,7 +198,6 @@ function Counter() {
   )
 }
 ```
-
 ````
 
 ::right::
@@ -206,8 +215,10 @@ function Counter() {
 <div class='text-center my-12' v-click="9">React 组件 = 逻辑组件 (Hooks) + UI 界面</div>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # useCounter 的打怪升级之路
 
@@ -236,8 +247,8 @@ layout: center
   <div v-if="$clicks === 18">📌 <code>actions</code> 对象也需要保持引用稳定，同时优化参数和命名</div>
   <div v-if="$clicks === 19">😇 继续完善 TypeScript 类型、JSDoc 注释，并统一命名</div>
   <div v-if="$clicks === 20">🥳 一个成熟的 <code>useCounter</code> 大功告成！</div>
-  <div v-if="$clicks === 21">🔍 看起来貌似没变化，但是内部已经做了大量优化</div>
-  <div v-if="$clicks === 22">🫣 这基本就是 <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code> 库里的 <code>useCounter</code> 的核心</div>
+  <div v-if="$clicks === 21">🔍 虽然使用起来没太多变化，但是其实内部已经进行了大量优化</div>
+  <div v-if="$clicks === 22">🫣 这基本就是 <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code> 里 <code>useCounter</code> 的核心</div>
   <div v-if="$clicks === 23">22</div>
 </div>
 
@@ -260,8 +271,8 @@ function OtherComponent() {
   const { count, add, minus } = useCounter(0)
   useEffect(() => {
     add()
-    const timer = setInterval(add, 1000);
-    return () => clearInterval(timer) 
+    const timer = setInterval(add, 1000)
+    return () => clearInterval(timer)
   }, [add])
   return <div>OtherComponent</div>
 }
@@ -290,8 +301,8 @@ function OtherComponent() {
   const { count, add, minus } = useCounter(0)
   useEffect(() => {
     add()
-    const timer = setInterval(add, 1000);
-    return () => clearInterval(timer) 
+    const timer = setInterval(add, 1000)
+    return () => clearInterval(timer)
   }, [add])
   return <div>OtherComponent</div>
 }
@@ -301,8 +312,8 @@ function OtherComponent() {
 function OtherComponent() {
   const { count, add, minus } = useCounter(0)
   async function handleClick() {
-    await fetchData(); // 3000ms
-    add() 
+    await fetchData() // 3000ms
+    add()
   }
   return <button onClick={handleClick}>{count}</button>
 }
@@ -312,9 +323,9 @@ function OtherComponent() {
 function OtherComponent() {
   const { count, add, minus } = useCounter(0)
   async function handleClick() {
-    await fetchData(); // 3000ms
+    await fetchData() // 3000ms
     // When component unmount, `setState` will still be called.
-    add() 
+    add()
   }
   return <button onClick={handleClick}>{count}</button>
 }
@@ -324,11 +335,11 @@ function OtherComponent() {
 function OtherComponent() {
   const { count, add, minus } = useCounter(0)
   async function handleClick() {
-    await fetchData(); // 3000ms
+    await fetchData() // 3000ms
     // Warning: Can't perform a React state update on an unmounted component. This is a no-op,
     // but it indicates a memory leak in your application.
     // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-    add() 
+    add()
   }
   return <button onClick={handleClick}>{count}</button>
 }
@@ -358,7 +369,7 @@ function useCounter(initialCount = 0) {
   const [count, setCount] = useSafeState(initial)
   const add = useMemoizedFn(() => setCount(count + 1))
   const minus = useMemoizedFn(() => setCount(count - 1))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -376,7 +387,7 @@ function useCounter(initialCount = 0) {
   const [count, setCount] = useSafeState(initial)
   const add = useMemoizedFn(() => setCount(count + 1))
   const minus = useMemoizedFn(() => setCount(count - 1))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -394,7 +405,7 @@ function useCounter(initialCount = 0) {
   const [count, setCount] = useSafeState(initial)
   const add = useMemoizedFn(() => setCount(count => count + 1))
   const minus = useMemoizedFn(() => setCount(count => count - 1))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -412,7 +423,7 @@ function useCounter(initialCount = 0) {
   const [count, setCount] = useSafeState(initial)
   const add = useMemoizedFn(() => setCount(count => count + 1))
   const minus = useMemoizedFn(() => setCount(count => count - 1))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -431,7 +442,7 @@ function useCounter(initialCount = 0) {
   const latest = useLatest({ initial })
   const add = useMemoizedFn(() => setCount(count => count + 1))
   const minus = useMemoizedFn(() => setCount(count => count - 1))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -450,7 +461,7 @@ function useCounter(initialCount = 0) {
   const latest = useLatest({ initial })
   const add = useMemoizedFn(() => setCount(count => count + 1))
   const minus = useMemoizedFn(() => setCount(count => count - 1))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -470,7 +481,7 @@ function useCounter(initialCount = 0) {
   const latest = useLatest({ initial })
   const inc = useMemoizedFn((delta = 1) => setCount(count => count + delta))
   const dec = useMemoizedFn((delta = 1) => setCount(count => count - delta))
-  const reset = useMemoizedFn((newInitial) => {
+  const reset = useMemoizedFn(newInitial => {
     if (newInitial !== undefined) {
       setInitial(newInitial)
       setCount(newInitial)
@@ -487,12 +498,12 @@ function useCounter(initialCount = 0) {
 export interface UseCounterReturnsAction {
   /**
    * increment the counter
-   * @param {number} [delta] - The increment value
+   * @param {number} [delta=1] - The increment value
    */
   inc: (delta?: number) => void
   /**
    * decrement the counter
-   * @param {number} [delta] - The decrement value
+   * @param {number} [delta=1] - The decrement value
    */
   dec: (delta?: number) => void
   /**
@@ -506,7 +517,29 @@ export type Count = number
 export type UseCounterReturns = readonly [Count, UseCounterReturnsAction]
 ```
 
-```tsx {*|}
+```tsx
+// TS types & JSDoc comments are omitted
+
+function useCounter(initialCount = 0) {
+  const [initial, setInitial] = useSafeState(initialCount)
+  const [count, setCount] = useSafeState(initial)
+  const latest = useLatest({ initial })
+  const inc = useMemoizedFn((delta = 1) => setCount(count => count + delta))
+  const dec = useMemoizedFn((delta = 1) => setCount(count => count - delta))
+  const reset = useMemoizedFn(newInitial => {
+    if (newInitial !== undefined) {
+      setInitial(newInitial)
+      setCount(newInitial)
+    } else {
+      setCount(latest.current.initial)
+    }
+  })
+  const actions = useCreation(() => ({ inc, dec, reset }), [])
+  return [count, actions]
+}
+```
+
+```tsx
 function Counter() {
   const [count, actions] = useCounter(0)
   return (
@@ -535,8 +568,10 @@ function Counter() {
 ````
 
 ---
+
+```yaml
 layout: center
----
+```
 
 <div class="flex justify-center mb-12" >
   <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-36" />
@@ -547,7 +582,7 @@ layout: center
 </div>
 
 <v-click>
-一个 SSR 友好、全面、标准化和高度优化的 React Hooks 库
+一个多环境 (SSR) 友好、全面、标准化和高度优化的 React Hooks 库
 </v-click>
 
 ---
@@ -555,8 +590,10 @@ layout: center
 <feature />
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # @shined/react-use 的特性与内部优化
 
@@ -593,16 +630,16 @@ layout: center
 ```tsx twoslash
 import { useTargetElement, useElementSize, usePausable, useMouse } from '@shined/react-use'
 
-const el = useTargetElement("#target")
-
+const el = useTargetElement('#target')
 const size = useElementSize(() => document.documentElement)
-
-const pausable = usePausable(false, () => {}, () => {});
-const { isActive, pause, resume } = pausable;
-
-const { x, y } = useMouse();
+const pausable = usePausable(
+  false,
+  () => {},
+  () => {}
+)
+const { isActive, pause, resume } = pausable
+const { x, y } = useMouse()
 // const { x, y, isActive, pause, resume } = useMouse();
-
 if (isActive()) {
   // do something...
 }
@@ -647,8 +684,8 @@ const add = useStableFn((delta = 1) => {
 <div v-click class='mt-8'>
 
 ```tsx
-import { render, Text } from "ink";
-import { useIntervalFn, useCounter } from '@shined/react-use';
+import { render, Text } from 'ink'
+import { useIntervalFn, useCounter } from '@shined/react-use'
 
 function App() {
   const [count, actions] = useCounter(0)
@@ -656,7 +693,7 @@ function App() {
   return <Text>Count: {count}</Text>
 }
 
-render(<App />);
+render(<App />)
 ```
 
 </div>
@@ -700,14 +737,20 @@ function App() {
 </div>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # @shined/react-use 的现代化配置
 
 ---
+
+```yaml
 layout: two-cols
----
+```
+
+# 现代化配置
 
 <v-clicks>
 <div class='flex flex-col gap-12 mt-12'>
@@ -717,14 +760,14 @@ layout: two-cols
     <vscode-icons-file-type-git class="size-8 mx-2" /> Monorepo
   </div>
   <div class='flex items-center'>
-    <span>版本锁定：</span>
-    <vscode-icons-file-type-node class="size-8 mx-2" /> .node-version + 
-    <vscode-icons-folder-type-package class="size-8 mx-2" /> pkgMgr
-  </div>
-  <div class='flex items-center'>
     <span>格式化和规范检查：</span>
     <vscode-icons-file-type-biome class="size-8 mx-2" /> Biome +
     <img src="/oxlint.svg" class="inline size-8 mx-2" /> oxlint
+  </div>
+  <div class='flex items-center'>
+    <span>测试与打包：</span>
+    <vscode-icons-file-type-vitest class="size-8 mx-2" /> Vitest +
+    <vscode-icons-file-type-esbuild class="size-8 mx-2" /> tsup (esbuild)
   </div>
   <div class='flex items-center'>
     <span>文档与示例：</span>
@@ -741,11 +784,11 @@ layout: two-cols
 ::right::
 
 <v-clicks>
-<div class='flex flex-col gap-12 mt-12'>
-  <div class='flex items-center'>
-    <span>测试与打包：</span>
-    <vscode-icons-file-type-vitest class="size-8 mx-2" /> Vitest +
-    <vscode-icons-file-type-esbuild class="size-8 mx-2" /> tsup (esbuild)
+<div class='flex flex-col gap-12 mt-20'>
+  <div class='flex flex-wrap items-center line-height-12'>
+    <span>版本锁定：</span>
+    <vscode-icons-file-type-node class="size-8 mx-2" /> .node-version + 
+    <vscode-icons-folder-type-package class="size-8 mx-2" /> {{'<package.json>.packageManager'}}
   </div>
   <div class='flex items-center'>
     <span>代码质量保障：</span>
@@ -770,8 +813,10 @@ layout: two-cols
 </v-clicks>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 一些思考
 
@@ -779,27 +824,27 @@ layout: center
 
 # State vs Ref
 
-State 和 Ref 都可以用来保存信息，该如何抉择
+State 和 Ref 都可以用来保存信息，该如何抉择？
 
 <v-click>
 
-- 组件的状态大致有四种: 全局状态、局部变量、Ref、State
-- 全局变量对于所有组件实例都是共享的，导致组件之间的状态混乱
-- 渲染阶段会在每次更新时被执行，<code>let</code> 和 <code>const</code> 会被重新声明
-- 遵循组件生命周期且多次渲染仍稳定存在的“状态”：State 和 Ref
+- 四种组件状态: 全局变量、局部变量、Ref、State
+- 全局变量对于所有组件实例都是共享的 (状态混乱)
+- 局部变量会在渲染阶段被重新声明 (<code>let</code> 和 <code>const</code>，状态丢失)
+- 遵循组件生命周期且多次渲染仍稳定存在的状态，只有 State 和 Ref
 - State 的更改会触发组件的重新渲染，而 Ref 的更改则不会
 
 ```tsx
 // 只会被声明一次，但会被所有组件实例共享
-let globalCount = 0 
+let globalCount = 0
 
 function Counter() {
   // 每次渲染都会被重新声明
-  let count = 0 
+  let count = 0
   // 只会被声明一次，更改不会触发重新渲染
-  const countRef = useRef(0) 
+  const countRef = useRef(0)
   // 只会被声明一次，更改会触发重新渲染
-  const [count, setCount] = useState(0) 
+  const [count, setCount] = useState(0)
   // ...
 }
 ```
@@ -824,9 +869,9 @@ function Counter() {
 
 ---
 
-# 引入 Ref Getter
+# 介绍 Ref Getter
 
-兼具信息存储功能与渲染优化的取舍与妥协
+兼具信息存储功能与渲染优化，一种取舍与妥协
 
 ```ts
 // const pausable = usePausable(); // { isActive, resume, pause }
@@ -841,11 +886,11 @@ function handleClick() {
   }
 }
 
-pause(); // will not trigger re-render
-pause(true); // will trigger re-render
+pause() // will not trigger re-render
+pause(true) // will trigger re-render
 ```
 
-<tip v-click><b>isActive</b> 状态的变更，默认不会触发重新渲染，值可通过 Getter 函数获取</tip>
+<tip v-click><b>isActive</b> 状态的变更，默认不会触发重新渲染（可选），其值可通过 Getter 函数获取</tip>
 
 ---
 
@@ -873,7 +918,7 @@ const isActive = useStableFn(() => ref.current)
 
 <br />
 
-<div v-click>还没结束。</div>
+<div v-click>还可以继续抽象</div>
 
 <br />
 
@@ -885,11 +930,13 @@ const [isActiveRef, isActive] = useGetterRef(false)
 
 </div>
 
-<tip v-click>利用 <b>useGetterRef</b> 来创建 Ref Getter，底层使用 Ref 而不是 State 以优化性能</tip>
+<tip v-click>利用 <b>useGetterRef()</b> 来创建 Ref Getter，底层使用 Ref 而不是 State 以优化性能</tip>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # useSafeState 做了什么
 
@@ -929,7 +976,7 @@ layout: center
 
 ```tsx
 const [value, setValue] = useSafeState({ count: 1 }, { deep: true })
-setValue({ count: 1}) // 更新 「同样」 的对象，如果未设置 deep，将触发组件重新更新
+setValue({ count: 1 }) // 更新「同样」的对象，如果未设置 deep，将触发组件重新更新
 ```
 
 </v-click>
@@ -937,8 +984,10 @@ setValue({ count: 1}) // 更新 「同样」 的对象，如果未设置 deep，
 <tip v-click>在状态「简单、可控」时，一次 deep compare 的开销远比一次组件渲染小的多得多</tip>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 单一职责
 
@@ -946,19 +995,24 @@ layout: center
 
 ---
 
-# 一套优秀的乐高积木应该是什么样子？
+# 一套优秀的乐高积木有什么特点？
 
-<div class='flex gap-6' v-click>
-  <img src='/lego-1.jpeg' class='h-48 rounded' />
-  <img src='/lego-2.png' class='h-48 rounded' />
+<div class='flex justify-between'>
+  <img src='/lego.png' class='h-60 rounded' v-click />
+  <div class='w-1/2 py-20 flex flex-col gap-8'>
+    <div v-click>种类多而全</div>
+    <div v-click>灵活可插拔</div>
+  </div>
 </div>
 
-<tip v-click>多而全：零件种类多 (不管是功能还是颜色)、各司其职，得以实现各种各样的奇思妙想</tip>
-<tip v-click>灵活可插拔：已经组装好的结构可再次拆卸或复用，或者能找到对应部件并能再次组装</tip>
+<tip v-click>种类多而全：零件种类多 (不管是功能还是颜色)、各司其职，得以实现各种各样的奇思妙想</tip>
+<tip v-click>灵活可插拔：已经组装好的结构可再次拆卸或复用，或者能找到对应部件并能再次快速组装</tip>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 逻辑组件 (Hooks) 应当像乐高积木一样
 
@@ -976,21 +1030,23 @@ layout: center
   - 时间格式化等其他常见的 util
 - 一个 Hook 里面包含了许多耦合的逻辑，导致难以进行拆分、复用和组合
   - 如: useRequest 内部包含了 loading、error、data、run、retry、cancel、refresh 等逻辑
-- Hooks 的职责和命名不够明确，边界模糊
+- 许多 Hooks 的职责和命名不够明确，边界模糊
   - 如: useInfiniteScroll 把所有状态都内聚了，对外部 store 等情况支持不友好
   - 如: usePagination 其实是 useRequest 的上层封装，而不是字面上的“分页”逻辑
 
 </v-clicks>
 
 <div class='mt-6 font-bold' v-click>
-一套数量够用的乐高零件，附带几辆「预装好了但是用胶水粘牢了」的大汽车，难以拆分和重组
+乐高视角：一套数量够用的零件，附带几辆「零件唯一、预装好、但被粘牢了」的大汽车，难以拆分和重组
 </div>
 
-<tip v-click>零件相对完善，大汽车在多数情况下也跑的很快，但丢失了乐高积木的灵活性和趣味性</tip>
+<tip v-click>零件相对完善，预装大汽车在多数情况下也确实跑的很快，但丢失了乐高积木的灵活和趣味性</tip>
 
 ---
+
+```yaml
 layout: two-cols-header
----
+```
 
 # @shined/react-use 的做法
 
@@ -1013,8 +1069,10 @@ layout: two-cols-header
 <img v-click src='/use-element-by-pointer.png' class='mx-4 h-80 rounded' />
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 关于 React 19
 
@@ -1024,19 +1082,19 @@ layout: center
 
 <v-clicks>
 
-- 引入了 「Actions」
-  - startTransition 支持异步操作，自动处理状态、错误、乐观更新等
+- 正式引入「Actions」概念
+  - startTransition 支持异步 Action，自动处理状态、错误、乐观更新等
 - 新 Hooks
   - useOptimistic, useActionState (前 useFormState), useFormStatus
 - 新 API
   - use 用于消费渲染过程中的资源 (如: 非渲染过程中创建的 Promise)
 - 新的范式
   - React Server Components + Server Actions
-- 其他改进: 
-  - 废弃 forwardRef, ref 可直接作为 props 传递, ref 参数回调支持清理函数
-  - Context 可以替代 Context.Provider 直接进行渲染
-  - 更多 Document Metadata 的支持，直接编写 title, link, meta 等元素
-  - 全面支持 HTML 原生自定义组件 (Custom Elements)
+- 其他改进:
+  - 废弃 forwardRef, ref 可直接作为 props 传递, Element 的 ref 参数支持返回清理函数
+  - `<Context />` 可以替代 `<Context.Provider />` 直接进行渲染
+  - 更多 Document Metadata 的支持，直接编写 `<title />`, `<link />`, `<meta />` 等元素
+  - 全面支持 HTML 原生自定义组件 (Custom Elements)，废弃组件的 defaultProps 属性
 
 </v-clicks>
 
@@ -1061,8 +1119,10 @@ layout: center
 <tip v-click>针对 React 19 的 Hooks 开发有必要，但是相对而言优先级不高，会放到后续阶段进行跟进</tip>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # Hooks 使用引导 / 高频预测
 
@@ -1084,8 +1144,10 @@ layout: center
 </v-clicks>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # @shined/react-use 的后续规划
 
@@ -1100,7 +1162,7 @@ layout: center
   - 覆盖大部分场景，已生产可用 （目前 137 个）
 - 业务强化期
   - 封装强业务的上层 Hooks
-  - 做到 「常见场景，一行代码开箱即用」
+  - 做到「常见场景，一行代码开箱即用」
 - 生态完善期
   - 与 shineout 等主流库做集成联动
   - 简化业务开发，同时扩大生态
@@ -1108,8 +1170,10 @@ layout: center
 </v-clicks>
 
 ---
+
+```yaml
 layout: center
----
+```
 
 # 回顾
 
@@ -1119,25 +1183,27 @@ layout: center
 
 <v-clicks>
 
-- Hooks 与 「逻辑组件」
+- Hooks 与「逻辑组件」
   - React 的重要事件节点，Hooks 开发成为主流
-  - 提出 「逻辑组件 (Hooks)」 概念，Hooks 可以被按需组合
+  - Hooks 可以被按需组合，提出「逻辑组件」(Hooks) 概念
   - 改进 useCounter，了解 Hooks 的常见陷阱与最佳实践
 - <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code>
   - 全面、轻量、灵活、高度优化、多环境友好、出色的开发体验、现代化配置
 - 一些思考
-  - State 和 Ref 的特点与取舍 
-  - 提出 Ref Getter，兼具存储信息与渲染优化
+  - State 和 Ref 的特点与取舍
+  - Ref Getter，兼具信息存储与渲染优化
   - useSafeState 的设计与思考
-  - 单一职责 (逻辑组件的按需组合)
+  - 单一职责，逻辑组件可按需组合
   - React 19 特性和业务价值
 - 使用预测及后续规划
 
 </v-clicks>
 
 ---
+
+```yaml
 layout: end
----
+```
 
 # The End
 
