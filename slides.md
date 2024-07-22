@@ -71,10 +71,10 @@ layout: center
 
 ## 类组件 (Class Component)
 
-```tsx twoslash
+```tsx
 // === before ===
-import React, { Component } from 'react'
-class Counter extends Component {
+import React from 'react'
+class Counter extends React.Component {
   state = { count: 0 }
   render() {
     return (
@@ -92,7 +92,7 @@ class Counter extends Component {
 
 ## 函数组件 (Function Component) + Hooks
 
-```tsx twoslash
+```tsx
 // === after ===
 import React, { useState } from 'react'
 function Counter() {
