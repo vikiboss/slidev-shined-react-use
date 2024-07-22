@@ -177,7 +177,7 @@ function Counter() {
 }
 ```
 
-```tsx {*|none}
+```tsx {*|*}
 function useCounter(initialCount = 0) {
   const [count, setCount] = useState(initialCount)
   const add = () => setCount(count + 1)
@@ -209,10 +209,10 @@ function Counter() {
 </div>
 
 <div class='text-center my-12 flex gap-4 justify-center'>
-  <span v-click="7">Hooks</span><span v-click="8">👉</span><span v-click="8">逻辑组件</span>
+  <span v-click="7">Hooks</span><span v-click="8">👉</span><span v-click="8">「逻辑组件」</span>
 </div>
 
-<div class='text-center my-12' v-click="9">React 组件 = 逻辑组件 (Hooks) + UI 界面</div>
+<div class='text-center my-12' v-click="9">React 组件 = 「逻辑组件」 (Hooks) + UI 界面</div>
 
 ---
 
@@ -227,7 +227,7 @@ layout: center
 # useCounter 的打怪升级之路
 
 <div class='mb-8'>
-  <div v-if="$clicks === 0">✅ 运行良好</div>
+  <div v-if="$clicks === 0">✅ 现有简单场景下，运行良好</div>
   <div v-if="$clicks === 1">🆕 新场景：首次 Mount +1，此后每间隔固定时间 +1</div>
   <div v-if="$clicks === 2">😨 组件死循环了，为什么？</div>
   <div v-if="$clicks === 3">🐛 罪魁祸首：<code>add</code> 函数每次渲染都会重新创建</div>
