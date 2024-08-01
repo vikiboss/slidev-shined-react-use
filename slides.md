@@ -11,7 +11,7 @@ defaults:
 
 # React Hooks 库的探索与思考
 
-👷 @Viki · 📅 2024.07
+👷 @Viki · 📅 2024.08
 
 <div class="flex justify-center mt-16 mb-8" >
   <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-24" />
