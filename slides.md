@@ -1167,7 +1167,7 @@ layout: center
 - **异步操作**：useRequest / useAsyncFn (useLoadingFn)
 - **状态相关**：useSafeState / useControlledComponent / useBoolean / useCircularList
 - **浏览器相关**：useMouse / useScroll / useElementSize / useFullscreen / useNetwork
-- **节流/防抖/定时器**：useDebouncedFn / useThrottledFn / useIntervalFn
+- **节流/防抖/定时器**：useThrottledFn / useDebouncedFn / useIntervalFn
 - **强业务/场景化**：useInfiniteScroll / useDynamicList / useCountdown / useMultiSelect
 - **时间格式化**：useDateFormat (dayjs、moment、date-fns 简单使用场景的平替)
 - **复制操作 (剪贴板)**：useClipboard (读、写，自动降级到 <code>document.exec('copy')</code>)
