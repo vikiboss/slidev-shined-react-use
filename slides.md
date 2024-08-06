@@ -227,7 +227,7 @@ layout: center
 # useCounter 的打怪升级之路
 
 <div class='mb-8'>
-  <div v-if="$clicks === 0">✅ 现有简单场景下，运行良好</div>
+  <div v-if="$clicks === 0">✅ 现有的简单场景下，运行良好</div>
   <div v-if="$clicks === 1">🆕 新场景：首次 Mount +1，此后每间隔固定时间 +1</div>
   <div v-if="$clicks === 2">😨 组件死循环了，为什么？</div>
   <div v-if="$clicks === 3">🐛 罪魁祸首：<code>add</code> 函数每次渲染都会重新创建</div>
@@ -235,7 +235,7 @@ layout: center
   <div v-if="$clicks === 5">😄 效果显著，完美解决</div>
   <div v-if="$clicks === 6">🆕 新场景：用户交互触发异步操作，在完成前用户提前离开了</div>
   <div v-if="$clicks === 7">🆕 新场景：但后续存在 <code>setState</code> 操作 (即组件卸载后)</div>
-  <div v-if="[8, 9].includes($clicks)">🤔️ 虽然没有问题，但是报了个 Warning</div>
+  <div v-if="[8, 9].includes($clicks)">🤔️ 虽然没有问题，但是报了个 Warning （React <= v17）</div>
   <div v-if="$clicks === 10">🙋 这题我会，该 <code>useSafeState</code> 出马了</div>
   <div v-if="$clicks === 11">🤗 这下组件卸载后，永远也不会执行 <code>setState</code> 了 (<a href="https://github.com/alibaba/hooks/blob/b2f12185963b7efe46ec70c97f661849f89892b5/packages/hooks/src/useSafeState/index.ts#L13-L15">按照 ahooks 的逻辑</a>)</div>
   <div v-if="$clicks === 12">🆙 新需求：需支持重置操作，同时支持传参改变初始值</div>
@@ -266,7 +266,7 @@ function Counter() {
 }
 ```
 
-```tsx {*|7}
+```tsx {*|*}
 function OtherComponent() {
   const { count, add, minus } = useCounter(0)
   useEffect(() => {
@@ -968,7 +968,7 @@ layout: center
   - React 17 及以下版本（会抛出警告），组件卸载后，不执行 setState，以抑制抛出的警告
   - React 18 及以上版本（警告被移除），不做任何处理，等同于 useState，遵循官方推荐做法
 - 新增了可选的 deep 选项
-  - 用于深度对比并决定是否更新，默认 false，具备渲染优化
+  - 用于深度对比并决定是否更新，具备渲染优化，默认 false (不开启)
 
 <br />
 
@@ -991,7 +991,7 @@ layout: center
 
 # 单一职责
 
-一次只做一件事，并把它做好
+一次只做一件事，并把它尽可能做好
 
 ---
 
@@ -1026,10 +1026,10 @@ layout: center
 
 - 覆盖面较广 (70+)，但仍缺乏许多常见场景的 Hooks
   - 复制操作、剪切板读写
-  - 浏览器内存、FPS 等各种浏览器 API
-  - 时间格式化等其他常见的 util
+  - 浏览器取色器、FPS 等各种浏览器 API
+  - 时间格式化等其他常见的高频简单逻辑
 - 一个 Hook 里面包含了许多耦合的逻辑，导致难以进行拆分、复用和组合
-  - 如: useRequest 内部包含了 loading、error、data、run、retry、cancel、refresh 等逻辑
+  - 如: useRequest 内部包含了 loading 状态、轮询、错误重试、聚焦重加载、重连重加载 等逻辑
 - 许多 Hooks 的职责和命名不够明确，边界模糊
   - 如: useInfiniteScroll 把所有状态都内聚了，对外部 store 等情况支持不友好
   - 如: usePagination 其实是 useRequest 的上层封装，而不是字面上的“分页”逻辑
@@ -1037,10 +1037,10 @@ layout: center
 </v-clicks>
 
 <div class='mt-6 font-bold' v-click>
-乐高视角：一套数量够用的零件，附带几辆「零件唯一、预装好、但被粘牢了」的大汽车，难以拆分和重组
+乐高视角：一套数量够用的零件，附带几辆「零件罕见、预装好但被粘牢」的大汽车，难以拆分和重组
 </div>
 
-<tip v-click>零件相对完善，预装大汽车在多数情况下也确实跑的很快，但丢失了乐高积木的灵活和趣味性</tip>
+<tip v-click>零件相对完善，大汽车在多数情况下也确实跑的很快，但丢失了乐高积木强调的灵活和趣味性</tip>
 
 ---
 
@@ -1050,23 +1050,54 @@ layout: two-cols-header
 
 # @shined/react-use 的做法
 
+ 一次只做一件事，且做到极致
+
 ::left::
 
 <v-clicks>
 
 - 逻辑组件 (Hooks) 的<span v-mark="{ at: 4, color: '#f59e0b', type: 'underline'}">单一职责</span>
-  - 一次只做一件事，且做到极致
-  - 如: useClipboard 处理剪贴板读、写，支持常见相关操作与自动降级
-  - 如: usePagination 如其名，只提供分页状态和操作，无额外逻辑
-  - 如: useInfiniteScroll 只做滚动加载逻辑，精确提供加载回调和滚动状态，业务逻辑交由用户自由处理
+  - 如: useClipboard 处理剪贴板读、写，支持常见相关操作与 API 自动降级
+  - 如: usePagination 只处理分页状态，无额外逻辑
+  - 如: useInfiniteScroll 只处理滚动加载逻辑，精确提供加载回调和滚动状态，状态处理交由用户
 - 逻辑组件 (Hooks) 的<span v-mark="{ at: 5, color: '#f59e0b', type: 'underline'}">按需组合</span>
   - Hooks 细致拆分、按需组合，而不是一个 Hooks 内聚大量业务逻辑和状态
+  - useRequest (基本成型) 组合了 13 个 Hooks 完成 80% 以上的核心逻辑，代码量不到 400 行
 
 </v-clicks>
 
 ::right::
 
 <img v-click src='/use-element-by-pointer.png' class='mx-4 h-80 rounded' />
+
+---
+
+```yaml
+layout: center
+```
+
+# useRequest 能力预览
+
+当前处于开发后期阶段，核心功能基本完善
+
+---
+
+# useRequest 能力预览
+
+作为后期大多数业务场景 Hooks 的基础逻辑，useRequest 是重中之重
+
+- 基础场景：管理异步请求，自动处理 loading、error、data 等状态（useAsyncFn）
+- 依赖收集：用到什么状态，跟踪什么状态 （按需渲染，底层 Getter 依赖标记）
+- 请求轮询：定期自动发起请求更新数据，时刻保持数据最新（useIntervalFn）
+- 错误重试：支持错误重试，自动处理错误状态，重试请求（useRetryFn）
+- 生命周期：完整的请求生命周期支持，包括 onBefore、onSuccess、onError、onFinally 等
+- 聚焦重加载：在页面重新聚焦时，自动重新加载数据 （useReFocus，支持注册自定义处理函数）
+- 重连重加载：在断网重连后，自动重新加载数据 （useReConnect，支持注册自定义处理函数）
+- 依赖刷新：在依赖变化时，自动重新请求数据 （useUpdateEffect）
+- 慢加载状态：自动处理慢加载状态，提供慢加载回调 （useLoadingSlowFn）
+- 防抖和节流：手动执行时，支持通过防抖和节流进行频率限制 （useDebouncedFn、useThrottledFn）
+- 数据缓存：支持 `provider` 选项，通过一个「类 Map」的数据结构进行缓存操作（Reactive/LocalStorage）
+- 多环境支持：支持 SSR、React Native、Ink、小程序 等诸多场景，不强绑定 Web
 
 ---
 
@@ -1157,15 +1188,15 @@ layout: center
 
 <v-clicks>
 
-- 起步期（当前阶段）
+- 起步期（已基本结束）
   - 以原子化为主，也包含部分场景化 Hooks
-  - 覆盖大部分场景，已生产可用 （目前 137 个）
-- 业务强化期
-  - 封装强业务的上层 Hooks
-  - 做到「常见场景，一行代码开箱即用」
+  - 覆盖大部分场景，已生产可用 （目前 140+ 个）
+- 业务强化期（当前阶段）
+  - 封装「强业务」的上层 Hooks
+  - 做到在常见场景下，「几行代码实现开箱即用」
 - 生态完善期
-  - 与 shineout 等主流库做集成联动
-  - 简化业务开发，同时扩大生态
+  - 与 shineout 等主流库做集成联动，进行上层封装
+  - 简化业务开发的同时，扩大 Hooks 周边生态
 
 </v-clicks>
 
@@ -1183,19 +1214,19 @@ layout: center
 
 <v-clicks>
 
-- Hooks 与「逻辑组件」
+- Hooks 与 useCounter
   - React 的重要事件节点，Hooks 开发成为主流
-  - Hooks 可以被按需组合，提出「逻辑组件」(Hooks) 概念
+  - Hooks 可以被灵活组合，提出「逻辑组件」(Hooks) 概念
   - 改进 useCounter，了解 Hooks 的常见陷阱与最佳实践
 - <img src="https://sheinsight.github.io/react-use/logo.svg" class="h-6 inline" /> <code>@shined/react-use</code>
   - 全面、轻量、灵活、高度优化、多环境友好、出色的开发体验、现代化配置
 - 一些思考
-  - State 和 Ref 的特点与取舍
-  - Ref Getter，兼具信息存储与渲染优化
+  - State 和 Ref、Ref Getter，兼具信息存储与渲染优化
   - useSafeState 的设计与思考
-  - 单一职责，逻辑组件可按需组合
-  - React 19 特性和业务价值
-- 使用预测及后续规划
+  - 单一职责，逻辑组件应当可按需组合
+  - useRequest 能力预览
+  - React 19 新特性和当前业务价值
+- Hooks 的使用预测及后续规划
 
 </v-clicks>
 
@@ -1209,4 +1240,4 @@ layout: end
 
 感谢大家的耐心收听
 
-## （Q&A）
+## （Q & A）
